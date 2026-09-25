@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="theme-color" content="#0b5cff">
+  <meta name="description" content="부산 진해신항 컨테이너부두 1-1공구 스마트 안전관리 프로토타입">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <title>1-1공구 스마트 안전관리</title>
+  <style>
+    :root{
+      --blue:#0b5cff;--blue2:#0848c7;--navy:#0c1730;--bg:#f4f6fa;--card:#fff;
+      --text:#172033;--muted:#697386;--line:#e5e9f0;--red:#e53935;--orange:#f59e0b;
+      --green:#16a34a;--shadow:0 6px 22px rgba(20,32,55,.08);--radius:18px
+    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans KR","Malgun Gothic",sans-serif}
+    body{padding-bottom:82px}
+    button,input,textarea,select{font:inherit}
+    button{border:0;cursor:pointer}
+    .app{max-width:720px;margin:auto;min-height:100vh}
+    .top{background:linear-gradient(135deg,#0b5cff,#063da9);color:#fff;padding:18px 18px 22px;position:sticky;top:0;z-index:20}
+    .toprow{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .eyebrow{font-size:12px;opacity:.82;margin-bottom:5px}.title{font-size:20px;font-weight:800}.sub{font-size:12px;opacity:.85;margin-top:4px}
+    .status{background:rgba(255,255,255,.16);padding:8px 10px;border-radius:999px;font-size:11px;white-space:nowrap}
+    main{padding:16px}
+    .screen{display:none}.screen.active{display:block}
+    .hero{background:var(--card);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-bottom:14px}
+    .hero h2{margin:0 0 7px;font-size:20px}.hero p{margin:0;color:var(--muted);font-size:13px;line-height:1.55}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.grid3{grid-template-columns:repeat(3,1fr)}
+    .stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;min-height:100px}
+    .stat .label{font-size:12px;color:var(--muted)}.stat .num{font-size:28px;font-weight:850;margin-top:7px}.danger{color:var(--red)}.warn{color:var(--orange)}.ok{color:var(--green)}
+    .section{margin-top:18px}.section h3{font-size:15px;margin:0 0 10px}
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:12px}
+    .row{display:flex;justify-content:space-between;align-items:center;gap:10px}.row+.row{margin-top:10px}
+    .chip{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:700;background:#eef3ff;color:var(--blue)}
+    .chip.red{background:#ffeded;color:#c62828}.chip.orange{background:#fff5df;color:#a16207}.chip.green{background:#eaf8ef;color:#15803d}.chip.gray{background:#f0f2f5;color:#5f6878}
+    .item-title{font-size:14px;font-weight:800}.item-sub{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.45}
+    .btn{border-radius:13px;padding:12px 14px;font-weight:800;background:var(--blue);color:#fff;width:100%}
+    .btn.secondary{background:#eef3ff;color:var(--blue)}.btn.red{background:var(--red)}.btn.dark{background:var(--navy)}
+    .btn.small{width:auto;padding:9px 11px;font-size:12px}
+    .quick{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.quick button{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 6px;font-size:11px;font-weight:750;color:#283247}
+    .quick .ico{font-size:22px;display:block;margin-bottom:6px}
+    .bottom{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-top:1px solid var(--line);z-index:30}
+    .nav{max-width:720px;margin:auto;display:grid;grid-template-columns:repeat(5,1fr);height:72px}
+    .nav button{background:none;color:#7b8494;font-size:10px;font-weight:700;padding-top:9px}.nav button.active{color:var(--blue)}
+    .nav .ni{font-size:21px;display:block;margin-bottom:3px}
+    .map{height:420px;border-radius:18px;background:#dfe7d8;position:relative;overflow:hidden;border:1px solid #cbd4c3}
+    .water{position:absolute;right:0;top:0;bottom:0;width:30%;background:#a9d7ec}.land{position:absolute;left:0;top:0;bottom:0;right:30%;background:#dce5d4}
+    .road{position:absolute;background:#b7b9bc;border:2px solid #999}.r1{left:5%;right:25%;top:22%;height:38px}.r2{left:8%;right:12%;top:66%;height:34px}.r3{left:28%;top:8%;width:35%;bottom:5%}
+    .zone{position:absolute;border:2px dashed rgba(196,45,45,.75);background:rgba(240,90,90,.13);border-radius:12px}
+    .z1{left:10%;top:30%;width:30%;height:22%}.z2{left:48%;top:45%;width:25%;height:30%}
+    .marker{position:absolute;transform:translate(-50%,-50%);background:#fff;border:2px solid var(--blue);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px #0003;font-size:16px}
+    .marker.red{border-color:var(--red)}.marker.orange{border-color:var(--orange)}.marker.green{border-color:var(--green)}
+    .legend{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.legend span{font-size:10px;color:#5f6878;background:#fff;padding:6px 8px;border-radius:999px}
+    .form label{font-size:12px;font-weight:800;display:block;margin:13px 0 6px}.form input,.form select,.form textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;outline:none}.form textarea{min-height:100px;resize:vertical}
+    .camera{border:2px dashed #cbd3df;border-radius:14px;padding:16px;text-align:center;background:#fafbfc}.camera input{display:none}
+    .modal{position:fixed;inset:0;background:rgba(10,18,34,.55);display:none;align-items:flex-end;z-index:50}.modal.open{display:flex}
+    .sheet{background:#fff;border-radius:24px 24px 0 0;width:100%;max-width:720px;margin:auto;padding:20px;max-height:90vh;overflow:auto}
+    .toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:#172033;color:#fff;padding:11px 15px;border-radius:999px;font-size:12px;display:none;z-index:60}
+    .toast.show{display:block}
+    .timeline{border-left:2px solid #dce2ea;margin:8px 0 0 7px;padding-left:15px}.tl{position:relative;margin:0 0 15px}.tl:before{content:"";position:absolute;left:-22px;top:4px;width:9px;height:9px;border-radius:50%;background:var(--blue)}
+    .notice{background:#fff8e7;border:1px solid #f6d889;border-radius:14px;padding:12px;font-size:12px;line-height:1.55}
+    @media(min-width:700px){body{padding-bottom:0}.bottom{position:sticky;bottom:0}.nav{height:66px}main{padding:22px}.top{border-radius:0 0 22px 22px}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="toprow">
+      <div>
+        <div class="eyebrow">부산 진해신항 컨테이너부두 1-1공구</div>
+        <div class="title">스마트 안전관리</div>
+        <div class="sub">현장 프로토타입 · 2026.09</div>
+      </div>
+      <div class="status">● 현장 운영중</div>
+    </div>
+  </header>
+
+  <main>
+    <section id="home" class="screen active">
+      <div class="hero">
+        <h2>오늘의 안전현황</h2>
+        <p>근로자가 휴대폰으로 위험을 신고하고, 안전관리자가 현황과 조치상태를 한 화면에서 관리하는 프로토타입입니다.</p>
+      </div>
+      <div class="grid">
+        <div class="stat"><div class="label">고위험작업</div><div class="num danger">7</div></div>
+        <div class="stat"><div class="label">미조치 신고</div><div class="num warn" id="unresolved">3</div></div>
+        <div class="stat"><div class="label">오늘 근로자</div><div class="num">186</div></div>
+        <div class="stat"><div class="label">작업허가</div><div class="num ok">12</div></div>
+      </div>
+      <div class="section"><h3>빠른 신고·조치</h3>
+        <div class="quick">
+          <button onclick="openReport()"><span class="ico">📷</span>위험신고</button>
+          <button onclick="stopWork()"><span class="ico">🛑</span>작업중지</button>
+          <button onclick="call119()"><span class="ico">🚑</span>119</button>
+          <button onclick="go('map')"><span class="ico">📍</span>현장지도</button>
+        </div>
+      </div>
+      <div class="section"><h3>오늘의 주요 현황</h3>
+        <div class="card">
+          <div class="row"><div><div class="item-title">부두 안벽 크레인 기초공</div><div class="item-sub">협력업체 A · 07:00~18:00</div></div><span class="chip red">고위험</span></div>
+          <div class="row"><div><div class="item-title">굴삭기 3대 작업</div><div class="item-sub">토공구간 B · 신호수 배치 확인</div></div><span class="chip orange">작업중</span></div>
+          <div class="row"><div><div class="item-title">오늘 TBM 5건</div><div class="item-sub">전 공종 실시 예정</div></div><span class="chip green">정상</span></div>
+        </div>
+      </div>
+      <div class="notice">※ 본 프로토타입의 현장 배치도·수치·연락처는 예시 데이터입니다. 실제 운영 전 현장 배치도, 담당자, 사내 기준 및 양식으로 교체해야 합니다.</div>
+    </section>
+
+    <section id="work" class="screen">
+      <div class="hero"><h2>작업안전</h2><p>고위험작업, 작업허가, 작업계획 및 현장 작업현황을 확인합니다.</p></div>
+      <div class="card"><div class="row"><div><div class="item-title">고위험작업 현황</div><div class="item-sub">현재 7건 · 위치별 확인 가능</div></div><span class="chip red">7건</span></div><button class="btn secondary" style="margin-top:12px" onclick="go('map')">고위험작업 지도 보기</button></div>
+      <div class="card"><div class="row"><div><div class="item-title">작업허가</div><div class="item-sub">고소·굴착·중장비·화기 등 허가대상 작업</div></div><span class="chip orange">12건</span></div><div class="timeline"><div class="tl"><b>WP-2026-0912</b><div class="item-sub">굴착작업 · 승인완료</div></div><div class="tl"><b>WP-2026-0913</b><div class="item-sub">고소작업 · 검토중</div></div></div></div>
+      <div class="card"><div class="row"><div><div class="item-title">작업계획</div><div class="item-sub">오늘 등록 18건 · 미확인 2건</div></div><span class="chip gray">확인</span></div></div>
+    </section>
+
+    <section id="report" class="screen">
+      <div class="hero"><h2>안전제보</h2><p>사진 → 위험유형 → 설명 → 제출 순서로 간단하게 신고합니다. 실명으로 접수되며 안전관리자가 확인합니다.</p></div>
+      <div class="card">
+        <button class="btn" onclick="openReport()">📷 위험요인 신고하기</button>
+        <button class="btn secondary" style="margin-top:9px" onclick="stopWork()">🛑 작업중지 요청</button>
+      </div>
+      <div class="section"><h3>최근 신고</h3>
+        <div id="reportList"></div>
+      </div>
+    </section>
+
+    <section id="map" class="screen">
+      <div class="hero"><h2>현장지도</h2><p>실제 현장 배치도 적용 전 단계의 인터랙티브 프로토타입입니다.</p></div>
+      <div class="map">
+        <div class="land"></div><div class="water"></div>
+        <div class="road r1"></div><div class="road r2"></div><div class="road r3"></div>
+        <div class="zone z1"></div><div class="zone z2"></div>
+        <div class="marker red" style="left:24%;top:41%" title="고위험작업">⚠️</div>
+        <div class="marker orange" style="left:58%;top:61%" title="굴삭기">🚜</div>
+        <div class="marker red" style="left:67%;top:28%" title="위험구역">⛔</div>
+        <div class="marker green" style="left:14%;top:77%" title="AED">❤️</div>
+        <div class="marker green" style="left:84%;top:83%" title="비상집결지">🏃</div>
+        <div class="marker" style="left:18%;top:16%" title="출입구">🚪</div>
+        <div class="marker" style="left:78%;top:17%" title="소화기">🧯</div>
+        <div class="marker" style="left:45%;top:86%" title="안전교육장">🏫</div>
+      </div>
+      <div class="legend"><span>🔴 고위험/위험구역</span><span>🟠 장비</span><span>🟢 응급·비상</span><span>🔵 시설</span></div>
+      <div class="card" style="margin-top:12px"><b>지도 적용 예정</b><div class="item-sub">실제 현장 배치도 이미지 또는 좌표 데이터를 반영하여 고위험작업, 굴삭기, 위험구역, 출입구, 비상집결지, AED, 소화기, 응급용품, 휴게실, 화장실, 안전교육장을 표시합니다.</div></div>
+    </section>
+
+    <section id="more" class="screen">
+      <div class="hero"><h2>응급·비상</h2><p>비상연락망과 응급 대응 기능을 빠르게 사용할 수 있습니다.</p></div>
+      <div class="grid">
+        <div class="card"><div class="item-title">🚑 119</div><div class="item-sub">응급환자·화재 등 긴급상황</div><button class="btn red" style="margin-top:10px" onclick="call119()">119 전화</button></div>
+        <div class="card"><div class="item-title">🛡️ 안전관리자</div><div class="item-sub">현장 안전관리팀</div><button class="btn dark" style="margin-top:10px" onclick="toast('안전관리팀 연락 기능은 실제 번호 등록 후 사용합니다.')">연락</button></div>
+      </div>
+      <div class="card"><div class="item-title">비상집결지</div><div class="item-sub">현장지도에서 위치 확인</div><button class="btn secondary" style="margin-top:10px" onclick="go('map')">지도 열기</button></div>
+      <div class="card"><div class="item-title">AED / 응급용품</div><div class="item-sub">현장 내 위치와 비치현황을 지도에 표시하도록 설계</div></div>
+      <div class="card"><div class="item-title">중대재해 대응</div><div class="item-sub">초동조치 → 상황전파 → 현장통제 → 보고 → 기록의 흐름으로 연결 예정</div></div>
+    </section>
+  </main>
+
+  <div class="bottom"><nav class="nav">
+    <button data-go="home" class="active"><span class="ni">🏠</span>홈</button>
+    <button data-go="work"><span class="ni">🦺</span>작업안전</button>
+    <button data-go="report"><span class="ni">📢</span>안전제보</button>
+    <button data-go="map"><span class="ni">🗺️</span>현장지도</button>
+    <button data-go="more"><span class="ni">🚨</span>응급·비상</button>
+  </nav></div>
+</div>
+
+<div class="modal" id="modal"><div class="sheet">
+  <div class="row"><h3 style="margin:0">위험요인 신고</h3><button class="btn small secondary" onclick="closeModal()">닫기</button></div>
+  <form class="form" onsubmit="submitReport(event)">
+    <label>사진</label>
+    <label class="camera"><span style="font-size:30px">📷</span><br>사진 촬영 또는 갤러리에서 선택<input id="photo" type="file" accept="image/*" capture="environment" onchange="photoChanged()"></label>
+    <div id="photoName" class="item-sub" style="margin-top:7px"></div>
+    <label>위험유형</label>
+    <select id="type" required><option value="">선택하세요</option><option>추락</option><option>끼임·충돌</option><option>굴착·붕괴</option><option>중장비</option><option>화재·폭발</option><option>전기</option><option>통행·정리정돈</option><option>기타</option></select>
+    <label>설명</label><textarea id="desc" required placeholder="위험요인과 위치를 입력하세요."></textarea>
+    <label>신고자</label><input id="reporter" required placeholder="이름">
+    <label>소속</label><input id="company" required placeholder="협력업체명">
+    <button class="btn" style="margin-top:16px">신고 제출</button>
+  </form>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const screens=[...document.querySelectorAll('.screen')];
+const navs=[...document.querySelectorAll('.nav button')];
+let reports=JSON.parse(localStorage.getItem('safetyReports')||'[]');
+
+function go(id){
+  screens.forEach(s=>s.classList.toggle('active',s.id===id));
+  navs.forEach(n=>n.classList.toggle('active',n.dataset.go===id));
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='report') renderReports();
+}
+navs.forEach(n=>n.addEventListener('click',()=>go(n.dataset.go)));
+
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2300)}
+function openReport(){document.getElementById('modal').classList.add('open')}
+function closeModal(){document.getElementById('modal').classList.remove('open')}
+function photoChanged(){const f=document.getElementById('photo').files[0];document.getElementById('photoName').textContent=f?'선택됨: '+f.name:''}
+function submitReport(e){
+  e.preventDefault();
+  const r={id:Date.now(),type:document.getElementById('type').value,desc:document.getElementById('desc').value,reporter:document.getElementById('reporter').value,company:document.getElementById('company').value,status:'접수',time:new Date().toLocaleString('ko-KR')};
+  reports.unshift(r);localStorage.setItem('safetyReports',JSON.stringify(reports));
+  e.target.reset();document.getElementById('photoName').textContent='';closeModal();toast('위험신고가 접수되었습니다.');go('report');
+}
+function renderReports(){
+  const el=document.getElementById('reportList');
+  if(!reports.length){el.innerHTML='<div class="card"><div class="item-sub">아직 등록된 신고가 없습니다.</div></div>';return}
+  el.innerHTML=reports.slice(0,8).map(r=>`<div class="card"><div class="row"><div><div class="item-title">${r.type}</div><div class="item-sub">${escapeHtml(r.desc)}</div></div><span class="chip orange">${r.status}</span></div><div class="item-sub" style="margin-top:9px">${escapeHtml(r.company)} · ${escapeHtml(r.reporter)} · ${r.time}</div></div>`).join('');
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function stopWork(){toast('작업중지 요청 화면을 실제 운영 규정에 맞춰 연결할 수 있습니다.');go('report')}
+function call119(){window.location.href='tel:119'}
+renderReports();
+
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
+</script>
+</body>
+</html>

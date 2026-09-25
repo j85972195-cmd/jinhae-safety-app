@@ -1,0 +1,12 @@
+{
+  "name": "부산 진해신항 1-1공구 스마트 안전관리",
+  "short_name": "1-1공구 안전",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f4f6fa",
+  "theme_color": "#0b5cff",
+  "lang": "ko",
+  "icons": [
+    {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
