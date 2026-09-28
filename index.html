@@ -37,12 +37,18 @@
         .badge-success { background-color: #28a745; }
         .badge-leader { background-color: #d97706; color: #fff; font-weight: 800; border: 1px solid #b45309; }
 
+        /* Subcard for Subcontractors */
+        .sub-company-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-bottom: 8px; }
+        .sub-company-title { font-size: 0.85rem; font-weight: bold; color: var(--primary-color); border-bottom: 1px solid #cbd5e1; padding-bottom: 4px; margin-bottom: 6px; }
+        .role-group { margin-left: 6px; font-size: 0.8rem; margin-top: 4px; }
+        .role-title { font-weight: bold; font-size: 0.75rem; color: #475569; margin-top: 4px; }
+
         /* Tab Content */
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
         /* List Items */
-        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed #eee; }
+        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px dashed #eee; }
         .item-row:last-child { border-bottom: none; }
         .leader-row { background-color: #fffbe3; border-left: 4px solid #f59e0b; padding-left: 8px; margin-bottom: 4px; border-radius: 4px; }
 
@@ -54,7 +60,7 @@
         .btn-outline { background: transparent; border: 1px solid var(--primary-color); color: var(--primary-color); }
         .btn-sm { padding: 4px 8px; font-size: 0.72rem; }
 
-        /* Bottom Nav (6 Tabs) */
+        /* Bottom Nav */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: #ffffff; display: flex; border-top: 1px solid #ddd; z-index: 1000; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.65rem; color: #666; text-decoration: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
         .nav-item.active { color: var(--primary-color); font-weight: bold; }
@@ -72,7 +78,7 @@
         .form-control { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.85rem; }
 
         /* Map Canvas */
-        #siteMapCanvas { width: 100%; height: 260px; background-color: #e5e7eb; border-radius: 8px; border: 1px solid #ccc; display: block; }
+        #siteMapCanvas { width: 100%; height: 260px; background-color: #e5e7eb; border-radius: 8px; border: 1px solid #ccc; display: block; cursor: crosshair; }
     </style>
 </head>
 <body>
@@ -99,13 +105,14 @@
                 <div id="highRiskList"></div>
             </div>
 
+            <!-- 협력업체 전용 출근 인원 분리 카드 -->
             <div class="card">
                 <div class="card-title">
-                    <span>👥 업체별 출근 인원 현황 (관리자/근로자/반장)</span>
+                    <span>🏗️ 협력업체별 출근 인원 현황 (원청 제외)</span>
                     <button class="btn btn-primary btn-sm admin-only" style="display:none;" onclick="openWorkerForm()">+ 인원 등록</button>
                 </div>
-                <div id="attendanceSummary" style="font-size:0.8rem; margin-bottom:10px; background:#f8f9fa; padding:8px; border-radius:6px;"></div>
-                <div id="workerListGrouped"></div>
+                <div id="subcontractorSummary" style="font-size:0.8rem; margin-bottom:10px; background:#f8f9fa; padding:8px; border-radius:6px;"></div>
+                <div id="subcontractorWorkerGroup"></div>
             </div>
 
             <div class="card">
@@ -121,7 +128,7 @@
         <div id="tab-work" class="tab-content">
             <div class="card">
                 <div class="card-title">
-                    <span>🚜 반입 장비 현황 및 제원 관리</span>
+                    <span>🚜 반입 장비 현황 및 제원 관리 (지도 연동)</span>
                     <button class="btn btn-primary btn-sm admin-only" style="display:none;" onclick="openEquipForm()">+ 장비 등록</button>
                 </div>
                 <div id="equipmentList"></div>
@@ -133,10 +140,6 @@
                     <div><strong>[TBM] 케이슨 침설작업 안전수칙</strong><div style="font-size:0.75rem; color:#666;">해상작업 / 구명조끼 착용 / 신호수 배치</div></div>
                     <button class="btn btn-outline btn-sm" onclick="alert('PDF 열기: 케이슨 침설작업 안전수칙.pdf')">보기</button>
                 </div>
-                <div class="item-row">
-                    <div><strong>[장비] 50T 크레인 인양 양중 가이드</strong><div style="font-size:0.75rem; color:#666;">신호체계 / 아웃트리거 받침목 확인</div></div>
-                    <button class="btn btn-outline btn-sm" onclick="alert('PDF 열기: 크레인 작업가이드.pdf')">보기</button>
-                </div>
             </div>
         </div>
 
@@ -146,40 +149,60 @@
                 <div class="card-title">
                     <span>📢 현대건설 공식 안전제보 시스템</span>
                 </div>
-                <p style="font-size:0.78rem; color:#666; margin-bottom:12px;">현장 내 위험요요소 및 아차사고를 현대건설 공식 안전제보 모바일 시스템을 통해 직접 신고할 수 있습니다.</p>
+                <p style="font-size:0.78rem; color:#666; margin-bottom:12px;">현장 내 위험요소 및 아차사고를 현대건설 공식 안전제보 모바일 시스템을 통해 직접 신고할 수 있습니다.</p>
                 <a href="https://hpms.hdec.co.kr/HDeSP/pSiteSafe/SafetyReport/m/SafetyReportM.aspx?siteCode=I51E&lang=ko&m=1" target="_blank" class="btn btn-warning" style="width:100%; font-size:0.85rem; display:block; box-sizing:border-box;">🔗 현대건설 안전제보 시스템 바로가기</a>
             </div>
         </div>
 
-        <!-- 4. EDUCATION TAB (Safee 지정 링크) -->
+        <!-- 4. EDUCATION TAB (Safee 지정 링크 및 교육장 연동) -->
         <div id="tab-edu" class="tab-content">
             <div class="card" style="border-left: 4px solid var(--primary-color);">
                 <div class="card-title">
                     <span>🎓 온라인 안전교육 시스템 (Safee)</span>
                 </div>
                 <p style="font-size:0.78rem; color:#666; margin-bottom:12px;">스마트 안전교육 플랫폼을 이용하여 근로자 및 관리자 지정 교육을 이수할 수 있습니다.</p>
-                <a href="https://app.safee.kr/main/home" target="_blank" class="btn btn-primary" style="width:100%; font-size:0.85rem; display:block; box-sizing:border-box;">🔗 Safee 안전교육 바로가기</a>
+                <a href="https://app.safee.kr/main/home" target="_blank" class="btn btn-primary" style="width:100%; font-size:0.85rem; display:block; box-sizing:border-box; margin-bottom:12px;">🔗 Safee 안전교육 바로가기</a>
+            </div>
+
+            <!-- 현장 안전교육장 소개 및 위치 연동 섹션 -->
+            <div class="card">
+                <div class="card-title">
+                    <span>🏫 현장 안전교육장 소개 (지도 연동)</span>
+                    <button class="btn btn-outline btn-sm admin-only" style="display:none;" onclick="openEduCenterEdit()">교육장 수정</button>
+                </div>
+                <div id="eduCenterDisplay">
+                    <!-- Dynamic Edu Center Details -->
+                </div>
             </div>
         </div>
 
-        <!-- 5. MAP TAB (인터랙티브 현장 지도) -->
+        <!-- 5. MAP TAB (관리자 수정 및 이미지 첨부/자동 연동) -->
         <div id="tab-map" class="tab-content">
             <div class="card">
                 <div class="card-title">
                     <span>🗺️ 인터랙티브 현장지도 (Site Map)</span>
+                    <button class="btn btn-primary btn-sm admin-only" style="display:none;" onclick="openAddPinModal()">+ 핀 추가/수정</button>
                 </div>
+
+                <!-- 관리자용 현장지도 이미지 첨부 기능 -->
+                <div class="admin-only" style="display:none; margin-bottom:8px; background:#edf2f7; padding:8px; border-radius:6px;">
+                    <label style="font-size:0.75rem; font-weight:bold;">🖼️ 전체 현장배치도 이미지 업로드:</label>
+                    <input type="file" id="mapImgUpload" accept="image/*" class="form-control" style="margin-top:4px;" onchange="uploadMapImage(event)">
+                </div>
+
                 <div style="display:flex; gap:5px; margin-bottom:10px; overflow-x:auto;">
                     <button class="btn btn-outline btn-sm" onclick="drawMap('all')">전체보기</button>
                     <button class="btn btn-outline btn-sm" onclick="drawMap('risk')">고위험작업</button>
                     <button class="btn btn-outline btn-sm" onclick="drawMap('equip')">반입장비</button>
-                    <button class="btn btn-outline btn-sm" onclick="drawMap('aed')">AED/응급</button>
+                    <button class="btn btn-outline btn-sm" onclick="drawMap('aed')">AED/교육장</button>
                 </div>
+
                 <canvas id="siteMapCanvas" width="340" height="260"></canvas>
-                <p style="font-size:0.72rem; color:#666; margin-top:6px;">※ 핀을 터치하면 상세 위치 정보를 확인할 수 있습니다.</p>
+                <p style="font-size:0.72rem; color:#666; margin-top:6px;">※ 지도 위 추가된 요소는 작업/장비/비상/교육 카테고리에 자동으로 연동됩니다.</p>
             </div>
         </div>
 
-        <!-- 6. EMERGENCY TAB (팀별 세부 비상연락망) -->
+        <!-- 6. EMERGENCY TAB (자동 연동 AED 및 비상연락망) -->
         <div id="tab-emergency" class="tab-content">
             <div class="card" style="background:#fff5f5; border:1px solid #feb2b2;">
                 <div class="card-title"><span style="color:#c53030;">🚨 긴급 비상 전화</span></div>
@@ -189,46 +212,23 @@
             <!-- 안전팀 비상연락망 -->
             <div class="card">
                 <div class="card-title"><span>🛡️ 안전팀 비상연락망</span></div>
-                <div class="item-row">
-                    <div><strong>팀장 방기동</strong><div style="font-size:0.75rem; color:#666;">📞 010-7578-3117</div></div>
-                    <a href="tel:010-7578-3117" class="btn btn-primary btn-sm">전화 걸기</a>
-                </div>
-                <div class="item-row">
-                    <div><strong>차장 정인교</strong><div style="font-size:0.75rem; color:#666;">📞 010-9301-2265</div></div>
-                    <a href="tel:010-9301-2265" class="btn btn-primary btn-sm">전화 걸기</a>
-                </div>
-                <div class="item-row">
-                    <div><strong>차장 이재명</strong><div style="font-size:0.75rem; color:#666;">📞 010-7923-0407</div></div>
-                    <a href="tel:010-7923-0407" class="btn btn-primary btn-sm">전화 걸기</a>
-                </div>
+                <div class="item-row"><div><strong>팀장 방기동</strong><div style="font-size:0.75rem; color:#666;">📞 010-7578-3117</div></div><a href="tel:010-7578-3117" class="btn btn-primary btn-sm">전화</a></div>
+                <div class="item-row"><div><strong>차장 정인교</strong><div style="font-size:0.75rem; color:#666;">📞 010-9301-2265</div></div><a href="tel:010-9301-2265" class="btn btn-primary btn-sm">전화</a></div>
+                <div class="item-row"><div><strong>차장 이재명</strong><div style="font-size:0.75rem; color:#666;">📞 010-7923-0407</div></div><a href="tel:010-7923-0407" class="btn btn-primary btn-sm">전화</a></div>
             </div>
 
             <!-- 수행팀 비상연락망 -->
             <div class="card">
                 <div class="card-title"><span>⚙️ 수행팀 비상연락망</span></div>
-                <div class="item-row">
-                    <div><strong>팀장 김정규</strong><div style="font-size:0.75rem; color:#666;">📞 010-2306-0069</div></div>
-                    <a href="tel:010-2306-0069" class="btn btn-primary btn-sm">전화 걸기</a>
-                </div>
-                <div class="item-row">
-                    <div><strong>차장 김광석</strong><div style="font-size:0.75rem; color:#666;">📞 010-4194-0110</div></div>
-                    <a href="tel:010-4194-0110" class="btn btn-primary btn-sm">전화 걸기</a>
-                </div>
-                <div class="item-row">
-                    <div><strong>차장 김태의</strong><div style="font-size:0.75rem; color:#666;">📞 010-8007-1925</div></div>
-                    <a href="tel:010-8007-1925" class="btn btn-primary btn-sm">전화 걸기</a>
-                </div>
+                <div class="item-row"><div><strong>팀장 김정규</strong><div style="font-size:0.75rem; color:#666;">📞 010-2306-0069</div></div><a href="tel:010-2306-0069" class="btn btn-primary btn-sm">전화</a></div>
+                <div class="item-row"><div><strong>차장 김광석</strong><div style="font-size:0.75rem; color:#666;">📞 010-4194-0110</div></div><a href="tel:010-4194-0110" class="btn btn-primary btn-sm">전화</a></div>
+                <div class="item-row"><div><strong>차장 김태의</strong><div style="font-size:0.75rem; color:#666;">📞 010-8007-1925</div></div><a href="tel:010-8007-1925" class="btn btn-primary btn-sm">전화</a></div>
             </div>
 
-            <!-- AED 위치 안내 -->
+            <!-- 자동 연동 AED 위치 안내 -->
             <div class="card">
-                <div class="card-title"><span>💚 AED (자동심장충격기) 위치</span></div>
-                <div class="item-row">
-                    <div><strong>제 1 AED: 원청 현장사무실 1층 로비</strong><div style="font-size:0.75rem; color:#666;">도보 2분 거리 | 24시간 개방</div></div>
-                </div>
-                <div class="item-row">
-                    <div><strong>제 2 AED: 케이슨 제작장 안전교육장</strong><div style="font-size:0.75rem; color:#666;">도보 4분 거리 | 구급함 동체 보관</div></div>
-                </div>
+                <div class="card-title"><span>💚 AED (자동심장충격기) 현황 (지도 연동)</span></div>
+                <div id="aedListSynced"></div>
             </div>
         </div>
     </div>
@@ -269,22 +269,23 @@
     <script>
         let isAdmin = false;
 
-        // INITIAL STORAGE DATA
+        // DEFAULT DATA STRUCTURES
         const defaultHighRisks = [
             { id: 1, name: '케이슨 3호 침설 및 수중 작업', area: '1-1공구 전면 해상', risk: '상', status: '진행중' },
             { id: 2, name: '50T 크레인 블록 인양 작업', area: '상부공 육상 야적장', risk: '상', status: '승인완료' }
         ];
 
+        // Workers (원청사 및 협력사 구분)
         const defaultWorkers = [
             { id: 1, name: '김현대', company: '원청(현대건설)', type: '관리자', job: '토목 안전관리', isLeader: false, status: '출근' },
             { id: 2, name: '박토건', company: '진해토건', type: '근로자', job: '형틀목공', isLeader: true, status: '출근' },
-            { id: 3, name: '이삼영', company: '삼영이앤씨', type: '근로자', job: '굴삭기 운전', isLeader: false, status: '출근' },
-            { id: 4, name: '최협력', company: '진해토건', type: '관리자', job: '현장소장', isLeader: false, status: '출근' }
+            { id: 3, name: '최진해', company: '진해토건', type: '관리자', job: '현장소장', isLeader: false, status: '출근' },
+            { id: 4, name: '이삼영', company: '삼영이앤씨', type: '근로자', job: '굴삭기 운전', isLeader: false, status: '출근' },
+            { id: 5, name: '정삼영', company: '삼영이앤씨', type: '관리자', job: '안전담당자', isLeader: false, status: '출근' }
         ];
 
         const defaultIssues = [
-            { id: 1, title: '크레인 작업구역 통제선 미설치', location: '야적장 B구역', status: '미조치', date: '2026-09-28' },
-            { id: 2, title: '굴삭기 후진 알람음 작동 불량', location: '케이슨 제작장', status: '조치완료', date: '2026-09-27' }
+            { id: 1, title: '크레인 작업구역 통제선 미설치', location: '야적장 B구역', status: '미조치', date: '2026-09-28' }
         ];
 
         const defaultEquip = [
@@ -292,11 +293,27 @@
             { id: 2, name: '50T 이동식 크레인', company: '진해토건', spec: '50톤 트럭크레인', capacity: '정격하중 50T', status: '반입중' }
         ];
 
+        // Site Map Pins (지도-카테고리 자동 연동 핀)
+        const defaultPins = [
+            { id: 101, type: 'risk', x: 80, y: 50, label: '케이슨 3호 침설 작업', detail: '해상 전면부' },
+            { id: 102, type: 'equip', x: 220, y: 150, label: 'CAT 330 굴삭기', detail: '삼영이앤씨 / 30톤' },
+            { id: 103, type: 'aed', x: 280, y: 220, label: '제 1 AED', detail: '원청 현장사무실 1층' },
+            { id: 104, type: 'edu', x: 60, y: 180, label: '중앙 안전교육장', detail: '케이슨 제작장 입구' }
+        ];
+
+        const defaultEduCenter = {
+            title: "진해신항 1-1공구 중앙 안전교육장",
+            photo: "", // Base64 DataURL or Image URL
+            desc: "신규 근로자 교육, 일일 TBM, 정기 안전교육을 실시하는 최첨단 스마트 교육 공간입니다. 최대 100명 수용 가능하며 VR 체험기기가 갖춰져 있습니다."
+        };
+
         // LocalStorage Initializer
         if (!localStorage.getItem('gems_highrisk')) localStorage.setItem('gems_highrisk', JSON.stringify(defaultHighRisks));
-        if (!localStorage.getItem('gems_workers_v2')) localStorage.setItem('gems_workers_v2', JSON.stringify(defaultWorkers));
+        if (!localStorage.getItem('gems_workers_v3')) localStorage.setItem('gems_workers_v3', JSON.stringify(defaultWorkers));
         if (!localStorage.getItem('gems_issues')) localStorage.setItem('gems_issues', JSON.stringify(defaultIssues));
-        if (!localStorage.getItem('gems_equip_v2')) localStorage.setItem('gems_equip_v2', JSON.stringify(defaultEquip));
+        if (!localStorage.getItem('gems_equip_v3')) localStorage.setItem('gems_equip_v3', JSON.stringify(defaultEquip));
+        if (!localStorage.getItem('gems_pins')) localStorage.setItem('gems_pins', JSON.stringify(defaultPins));
+        if (!localStorage.getItem('gems_educenter')) localStorage.setItem('gems_educenter', JSON.stringify(defaultEduCenter));
 
         function getData(key) { return JSON.parse(localStorage.getItem(key)); }
         function setData(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
@@ -335,11 +352,11 @@
             renderAll();
         }
 
-        // --- RENDER FUNCTIONS ---
+        // --- RENDER ALL SECTIONS WITH SUBCONTRACTOR SEPARATION & SYNC ---
         function renderAll() {
             document.querySelectorAll('.admin-only').forEach(el => el.style.display = isAdmin ? 'inline-block' : 'none');
 
-            // 1. High Risk List
+            // 1. High Risk (Home Dashboard)
             const hrList = getData('gems_highrisk');
             document.getElementById('highRiskList').innerHTML = hrList.map(item => `
                 <div class="item-row">
@@ -354,52 +371,64 @@
                 </div>
             `).join('');
 
-            // 2. Attendance List
-            const workers = getData('gems_workers_v2');
-            const totalAdmin = workers.filter(w => w.type === '관리자' && w.status === '출근').length;
-            const totalWorker = workers.filter(w => w.type === '근로자' && w.status === '출근').length;
+            // 2. Subcontractor Worker Grouping (EXCLUDING 원청)
+            const workers = getData('gems_workers_v3');
+            const subWorkers = workers.filter(w => !w.company.includes('현대건설') && !w.company.includes('원청'));
             
-            document.getElementById('attendanceSummary').innerHTML = `
-                총 출근 인원: <strong>${totalAdmin + totalWorker}명</strong> (관리자: ${totalAdmin}명 | 근로자: ${totalWorker}명)
+            // Subcontractor Companies list
+            const subCompanies = [...new Set(subWorkers.map(w => w.company))];
+            
+            let totalSubCount = subWorkers.filter(w => w.status === '출근').length;
+            document.getElementById('subcontractorSummary').innerHTML = `
+                협력업체 총 출근 인원: <strong>${totalSubCount}명</strong> (원청 인원 통계 제외)
             `;
 
-            document.getElementById('workerListGrouped').innerHTML = workers.map(w => `
-                <div class="item-row ${w.isLeader ? 'leader-row' : ''}">
-                    <div>
-                        <strong>${w.name}</strong> (${w.company}) 
-                        <span class="badge ${w.type === '관리자' ? 'badge-info' : 'badge-success'}">${w.type}</span>
-                        ${w.isLeader ? '<span class="badge badge-leader">👑 작업반장</span>' : ''}
-                        <div style="font-size:0.75rem; color:#666;">공종/직종: ${w.job}</div>
-                    </div>
-                    ${isAdmin ? `<div>
-                        <button class="btn btn-outline btn-sm" onclick="editWorker(${w.id})">수정</button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteWorker(${w.id})">삭제</button>
-                    </div>` : `<span class="badge ${w.status === '출근' ? 'badge-success' : 'badge-danger'}">${w.status}</span>`}
-                </div>
-            `).join('');
+            let subHTML = '';
+            subCompanies.forEach(comp => {
+                const compWorkers = subWorkers.filter(w => w.company === comp && w.status === '출근');
+                const managers = compWorkers.filter(w => w.type === '관리자');
+                const fieldWorkers = compWorkers.filter(w => w.type === '근로자');
 
-            // 3. Issues List
-            const issues = getData('gems_issues');
-            document.getElementById('issueList').innerHTML = issues.map(i => `
-                <div class="item-row">
-                    <div>
-                        <strong>${i.title}</strong>
-                        <div style="font-size:0.75rem; color:#666;">장소: ${i.location} | 등록일: ${i.date}</div>
-                    </div>
-                    <div>
-                        <span class="badge ${i.status === '미조치' ? 'badge-danger' : 'badge-success'}">${i.status}</span>
-                        ${isAdmin ? `<button class="btn btn-danger btn-sm" style="margin-left:4px;" onclick="deleteIssue(${i.id})">삭제</button>` : ''}
-                    </div>
-                </div>
-            `).join('');
+                subHTML += `
+                    <div class="sub-company-card">
+                        <div class="sub-company-title">🏢 ${comp} (출근: ${compWorkers.length}명)</div>
+                        
+                        <!-- 소분류 1: 관리자 -->
+                        <div class="role-title">👤 관리자 (${managers.length}명)</div>
+                        <div class="role-group">
+                            ${managers.length === 0 ? '<div style="font-size:0.75rem; color:#aaa;">출근 인원 없음</div>' : ''}
+                            ${managers.map(m => `
+                                <div class="item-row">
+                                    <span>${m.name} (${m.job})</span>${isAdmin ? `<button class="btn btn-danger btn-sm" onclick="deleteWorker(${m.id})">삭제</button>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
 
-            // 4. Equipment List
-            const equip = getData('gems_equip_v2');
+                        <!-- 소분류 2: 근로자 및 작업반장 -->
+                        <div class="role-title" style="margin-top:6px;">👷 근로자 (${fieldWorkers.length}명)</div>
+                        <div class="role-group">
+                            ${fieldWorkers.length === 0 ? '<div style="font-size:0.75rem; color:#aaa;">출근 인원 없음</div>' : ''}
+                            ${fieldWorkers.map(w => `
+                                <div class="item-row ${w.isLeader ? 'leader-row' : ''}">
+                                    <span>
+                                        <strong>${w.name}</strong> (${w.job})${w.isLeader ? '<span class="badge badge-leader">👑 작업반장</span>' : ''}
+                                    </span>
+                                    ${isAdmin ? `<button class="btn btn-danger btn-sm" onclick="deleteWorker(${w.id})">삭제</button>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('subcontractorWorkerGroup').innerHTML = subHTML || '<p style="font-size:0.8rem; color:#888;">등록된 협력업체가 없습니다.</p>';
+
+            // 3. Equipment Sync & Render
+            const equip = getData('gems_equip_v3');
             document.getElementById('equipmentList').innerHTML = equip.map(e => `
                 <div class="item-row">
                     <div>
                         <strong>${e.name}</strong> (${e.company})
-                        <div style="font-size:0.75rem; color:#666;">제원: ${e.spec} | 규격/용량: ${e.capacity}</div>
+                        <div style="font-size:0.75rem; color:#666;">제원: ${e.spec} | 용량: ${e.capacity}</div>
                     </div>
                     ${isAdmin ? `<div>
                         <button class="btn btn-outline btn-sm" onclick="editEquip(${e.id})">수정</button>
@@ -407,9 +436,178 @@
                     </div>` : `<span class="badge badge-success">${e.status}</span>`}
                 </div>
             `).join('');
+
+            // 4. Edu Center Sync (Education Tab)
+            const eduCenter = getData('gems_educenter');
+            document.getElementById('eduCenterDisplay').innerHTML = `
+                <div style="font-size:0.85rem; font-weight:bold; margin-bottom:6px;">${eduCenter.title}</div>
+                ${eduCenter.photo ? `<img src="${eduCenter.photo}" style="width:100%; height:160px; object-fit:cover; border-radius:8px; margin-bottom:8px;">` : '<div style="width:100%; height:100px; background:#e2e8f0; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#64748b; font-size:0.78rem; margin-bottom:8px;">등록된 교육장 전경 사진이 없습니다.</div>'}
+                <p style="font-size:0.8rem; color:#475569; line-height:1.4;">${eduCenter.desc}</p>
+            `;
+
+            // 5. AED Sync (Emergency Tab)
+            const pins = getData('gems_pins');
+            const aedPins = pins.filter(p => p.type === 'aed');
+            document.getElementById('aedListSynced').innerHTML = aedPins.map(p => `
+                <div class="item-row">
+                    <div>
+                        <strong>💚 ${p.label}</strong>
+                        <div style="font-size:0.75rem; color:#666;">위치: ${p.detail} (지도 연동됨)</div>
+                    </div>
+                    <button class="btn btn-outline btn-sm" onclick="alert('AED 위치: ${p.detail}')">위치확인</button>
+                </div>
+            `).join('');
         }
 
-        // --- MODAL UTILS ---
+        // --- MAP CANVAS & ADMIN CUSTOMIZATION ---
+        let uploadedMapImage = null;
+
+        function uploadMapImage(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        uploadedMapImage = img;
+                        drawMap('all');
+                        alert('전체 현장배치도 이미지가 새로 적용되었습니다.');
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function drawMap(filter) {
+            const canvas = document.getElementById('siteMapCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (uploadedMapImage) {
+                ctx.drawImage(uploadedMapImage, 0, 0, canvas.width, canvas.height);
+            } else {
+                // Default Map Drawing
+                ctx.fillStyle = "#e5e7eb";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = "#93c5fd";
+                ctx.fillRect(0, 0, canvas.width, 80);
+                ctx.fillStyle = "#1e3a8a";
+                ctx.font = "11px sans-serif";
+                ctx.fillText("🌊 부산 진해신항 해상 구역 (1-1공구)", 10, 20);
+
+                ctx.fillStyle = "#cbd5e1";
+                ctx.fillRect(10, 90, 320, 160);
+                ctx.fillStyle = "#334155";
+                ctx.fillText("🏗️ 육상 야적장 및 제작장 배치도", 20, 110);
+            }
+
+            // Draw Pins
+            const pins = getData('gems_pins');
+            pins.forEach(pin => {
+                if (filter === 'all' || filter === pin.type) {
+                    ctx.beginPath();
+                    ctx.arc(pin.x, pin.y, 9, 0, Math.PI * 2);
+                    ctx.fillStyle = pin.type === 'risk' ? '#dc3545' : pin.type === 'equip' ? '#f59e0b' : pin.type === 'aed' ? '#10b981' : '#3b82f6';
+                    ctx.fill();
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = '#ffffff';
+                    ctx.stroke();
+
+                    ctx.fillStyle = "#000000";
+                    ctx.font = "bold 10px sans-serif";
+                    ctx.fillText(pin.label, pin.x - 20, pin.y - 12);
+                }
+            });
+        }
+
+        // --- MAP PINS ADDITION & CATEGORY AUTO SYNC ---
+        function openAddPinModal() {
+            openModal('📍 현장지도 핀 추가 (자동 카테고리 연동)', `
+                <div class="form-group"><label>구분 (연동 카테고리)</label>
+                    <select id="pinType" class="form-control">
+                        <option value="risk">고위험작업 (작업안전 연동)</option>
+                        <option value="equip">반입장비 (장비관리 연동)</option>
+                        <option value="aed">AED (비상연락 연동)</option>
+                        <option value="edu">안전교육장 (안전교육 연동)</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>명칭</label><input type="text" id="pinLabel" class="form-control" placeholder="예: 100T 크레인 양중"></div>
+                <div class="form-group"><label>상세 위치설명</label><input type="text" id="pinDetail" class="form-control" placeholder="예: 케이슨 B구역"></div>
+                <div class="form-group"><label>X 좌표 (10~300)</label><input type="number" id="pinX" class="form-control" value="150"></div>
+                <div class="form-group"><label>Y 좌표 (10~240)</label><input type="number" id="pinY" class="form-control" value="120"></div>
+                <button class="btn btn-primary" style="width:100%; margin-top:10px;" onclick="saveMapPin()">핀 추가 및 카테고리 연동</button>
+            `);
+        }
+
+        function saveMapPin() {
+            const type = document.getElementById('pinType').value;
+            const label = document.getElementById('pinLabel').value;
+            const detail = document.getElementById('pinDetail').value;
+            const x = parseInt(document.getElementById('pinX').value);
+            const y = parseInt(document.getElementById('pinY').value);
+
+            if (!label) return alert('명칭을 입력하세요.');
+
+            let pins = getData('gems_pins');
+            const newPin = { id: Date.now(), type, x, y, label, detail };
+            pins.push(newPin);
+            setData('gems_pins', pins);
+
+            // AUTO SYNC WITH CATEGORIES
+            if (type === 'risk') {
+                let highRisks = getData('gems_highrisk');
+                highRisks.push({ id: Date.now(), name: label, area: detail, risk: '상', status: '진행중' });
+                setData('gems_highrisk', highRisks);
+            } else if (type === 'equip') {
+                let equips = getData('gems_equip_v3');
+                equips.push({ id: Date.now(), name: label, company: '협력사', spec: detail, capacity: '정격용량', status: '반입중' });
+                setData('gems_equip_v3', equips);
+            }
+
+            closeModal();
+            renderAll();
+            drawMap('all');
+            alert('새로운 핀이 추가되었으며 해당 카테고리와 자동으로 연동되었습니다.');
+        }
+
+        // --- EDU CENTER EDIT MODAL ---
+        function openEduCenterEdit() {
+            const edu = getData('gems_educenter');
+            openModal('🏫 안전교육장 소개 수정', `
+                <div class="form-group"><label>교육장 명칭</label><input type="text" id="edTitle" class="form-control" value="${edu.title}"></div>
+                <div class="form-group"><label>교육장 소개 문구</label><textarea id="edDesc" class="form-control" rows="3">${edu.desc}</textarea></div>
+                <div class="form-group"><label>전경 사진 첨부</label><input type="file" id="edPhotoFile" accept="image/*" class="form-control" onchange="convertEduPhoto(event)"></div>
+                <button class="btn btn-primary" style="width:100%; margin-top:10px;" onclick="saveEduCenter()">저장하기</button>
+            `);
+        }
+
+        let tempEduPhoto = "";
+        function convertEduPhoto(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) { tempEduPhoto = evt.target.result; };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function saveEduCenter() {
+            let edu = getData('gems_educenter');
+            edu.title = document.getElementById('edTitle').value;
+            edu.desc = document.getElementById('edDesc').value;
+            if (tempEduPhoto) edu.photo = tempEduPhoto;
+
+            setData('gems_educenter', edu);
+            closeModal();
+            renderAll();
+            alert('안전교육장 정보가 성공적으로 수정되었습니다.');
+        }
+
+        // MODAL UTILS
         function openModal(title, htmlContent) {
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalBody').innerHTML = htmlContent;
@@ -420,181 +618,45 @@
             document.getElementById('globalModal').classList.remove('active');
         }
 
-        // --- C.R.U.D HANDLERS ---
-        function openHighRiskForm(id = null) {
-            const list = getData('gems_highrisk');
-            const item = id ? list.find(x => x.id === id) : { name: '', area: '', risk: '상', status: '진행중' };
-
-            openModal(id ? '고위험 작업 수정' : '신규 고위험 작업 등록', `
-                <div class="form-group"><label>작업명</label><input type="text" id="hrName" class="form-control" value="${item.name}"></div>
-                <div class="form-group"><label>작업구역/위치</label><input type="text" id="hrArea" class="form-control" value="${item.area}"></div>
-                <div class="form-group"><label>위험등급</label>
-                    <select id="hrRisk" class="form-control">
-                        <option value="상" ${item.risk==='상'?'selected':''}>상 (High)</option>
-                        <option value="중" ${item.risk==='중'?'selected':''}>중 (Medium)</option>
-                    </select>
-                </div>
-                <button class="btn btn-primary" style="width:100%; margin-top:10px;" onclick="saveHighRisk(${id})">저장하기</button>
-            `);
-        }
-
-        function saveHighRisk(id) {
-            let list = getData('gems_highrisk');
-            const name = document.getElementById('hrName').value;
-            const area = document.getElementById('hrArea').value;
-            const risk = document.getElementById('hrRisk').value;
-
-            if(!name) return alert('작업명을 입력하세요.');
-
-            if(id) {
-                const idx = list.findIndex(x => x.id === id);
-                list[idx] = { id, name, area, risk, status: list[idx].status };
-            } else {
-                list.push({ id: Date.now(), name, area, risk, status: '진행중' });
-            }
-            setData('gems_highrisk', list);
-            closeModal();
-            renderAll();
-        }
-
-        function editHighRisk(id) { openHighRiskForm(id); }
-        function deleteHighRisk(id) {
-            if(confirm('해당 작업을 삭제하시겠습니까?')) {
-                let list = getData('gems_highrisk').filter(x => x.id !== id);
-                setData('gems_highrisk', list);
-                renderAll();
-            }
-        }
-
-        function openWorkerForm(id = null) {
-            const list = getData('gems_workers_v2');
-            const w = id ? list.find(x => x.id === id) : { name: '', company: '진해토건', type: '근로자', job: '', isLeader: false, status: '출근' };
-
-            openModal(id ? '출근 인원 수정' : '신규 인원 등록', `
-                <div class="form-group"><label>성명</label><input type="text" id="wkName" class="form-control" value="${w.name}"></div>
-                <div class="form-group"><label>소속 업체명</label><input type="text" id="wkCompany" class="form-control" value="${w.company}"></div>
-                <div class="form-group"><label>인원 구분</label>
+        // CRUD HELPER FOR WORKERS
+        function openWorkerForm() {
+            openModal('신규 협력업체 인원 등록', `
+                <div class="form-group"><label>성명</label><input type="text" id="wkName" class="form-control"></div>
+                <div class="form-group"><label>협력업체명</label><input type="text" id="wkCompany" class="form-control" placeholder="예: 진해토건"></div>
+                <div class="form-group"><label>구분</label>
                     <select id="wkType" class="form-control">
-                        <option value="근로자" ${w.type==='근로자'?'selected':''}>근로자</option>
-                        <option value="관리자" ${w.type==='관리자'?'selected':''}>관리자</option>
+                        <option value="근로자">근로자</option>
+                        <option value="관리자">관리자</option>
                     </select>
                 </div>
-                <div class="form-group"><label>공종 / 세부 직종</label><input type="text" id="wkJob" class="form-control" value="${w.job}"></div>
-                <div class="form-group">
-                    <label><input type="checkbox" id="wkLeader" ${w.isLeader ? 'checked' : ''}> 공종별 작업반장 지정</label>
-                </div>
-                <button class="btn btn-primary" style="width:100%; margin-top:10px;" onclick="saveWorker(${id})">저장하기</button>
+                <div class="form-group"><label>직종/공종</label><input type="text" id="wkJob" class="form-control" placeholder="예: 형틀목공"></div>
+                <div class="form-group"><label><input type="checkbox" id="wkLeader"> 공종별 작업반장 지정</label></div>
+                <button class="btn btn-primary" style="width:100%; margin-top:10px;" onclick="saveWorker()">등록하기</button>
             `);
         }
 
-        function saveWorker(id) {
-            let list = getData('gems_workers_v2');
+        function saveWorker() {
+            let list = getData('gems_workers_v3');
             const name = document.getElementById('wkName').value;
             const company = document.getElementById('wkCompany').value;
             const type = document.getElementById('wkType').value;
             const job = document.getElementById('wkJob').value;
             const isLeader = document.getElementById('wkLeader').checked;
 
-            if(!name) return alert('성명을 입력하세요.');
+            if (!name || !company) return alert('성명과 협력업체명을 입력하세요.');
 
-            if(id) {
-                const idx = list.findIndex(x => x.id === id);
-                list[idx] = { id, name, company, type, job, isLeader, status: list[idx].status };
-            } else {
-                list.push({ id: Date.now(), name, company, type, job, isLeader, status: '출근' });
-            }
-            setData('gems_workers_v2', list);
+            list.push({ id: Date.now(), name, company, type, job, isLeader, status: '출근' });
+            setData('gems_workers_v3', list);
             closeModal();
             renderAll();
         }
 
-        function editWorker(id) { openWorkerForm(id); }
         function deleteWorker(id) {
-            if(confirm('삭제하시겠습니까?')) {
-                let list = getData('gems_workers_v2').filter(x => x.id !== id);
-                setData('gems_workers_v2', list);
+            if (confirm('삭제하시겠습니까?')) {
+                let list = getData('gems_workers_v3').filter(x => x.id !== id);
+                setData('gems_workers_v3', list);
                 renderAll();
             }
-        }
-
-        function openEquipForm(id = null) {
-            const list = getData('gems_equip_v2');
-            const eq = id ? list.find(x => x.id === id) : { name: '', company: '', spec: '', capacity: '', status: '반입중' };
-
-            openModal(id ? '장비 수정' : '장비 등록', `
-                <div class="form-group"><label>장비명</label><input type="text" id="eqName" class="form-control" value="${eq.name}"></div>
-                <div class="form-group"><label>소속/등록번호</label><input type="text" id="eqCompany" class="form-control" value="${eq.company}"></div>
-                <div class="form-group"><label>규격 및 제원</label><input type="text" id="eqSpec" class="form-control" value="${eq.spec}"></div>
-                <div class="form-group"><label>정격하중/용량</label><input type="text" id="eqCapacity" class="form-control" value="${eq.capacity}"></div>
-                <button class="btn btn-primary" style="width:100%; margin-top:10px;" onclick="saveEquip(${id})">저장하기</button>
-            `);
-        }
-
-        function saveEquip(id) {
-            let list = getData('gems_equip_v2');
-            const name = document.getElementById('eqName').value;
-            const company = document.getElementById('eqCompany').value;
-            const spec = document.getElementById('eqSpec').value;
-            const capacity = document.getElementById('eqCapacity').value;
-
-            if(id) {
-                const idx = list.findIndex(x => x.id === id);
-                list[idx] = { id, name, company, spec, capacity, status: list[idx].status };
-            } else {
-                list.push({ id: Date.now(), name, company, spec, capacity, status: '반입중' });
-            }
-            setData('gems_equip_v2', list);
-            closeModal();
-            renderAll();
-        }
-
-        function editEquip(id) { openEquipForm(id); }
-        function deleteEquip(id) {
-            if(confirm('삭제하시겠습니까?')) {
-                let list = getData('gems_equip_v2').filter(x => x.id !== id);
-                setData('gems_equip_v2', list);
-                renderAll();
-            }
-        }
-
-        // --- MAP CANVAS ---
-        function drawMap(filter) {
-            const canvas = document.getElementById('siteMapCanvas');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-
-            ctx.fillStyle = "#e5e7eb";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            ctx.fillStyle = "#93c5fd";
-            ctx.fillRect(0, 0, canvas.width, 90);
-            ctx.fillStyle = "#1e3a8a";
-            ctx.font = "11px sans-serif";
-            ctx.fillText("🌊 부산 진해신항 해상 구역 (1-1공구)", 10, 20);
-
-            ctx.fillStyle = "#d1d5db";
-            ctx.fillRect(10, 100, 320, 150);
-            ctx.fillStyle = "#374151";
-            ctx.fillText("🏗️ 육상 야적장 및 케이슨 제작장", 20, 120);
-
-            const pins = [
-                { type: 'risk', x: 80, y: 50, label: '🔥 케이슨 침설' },
-                { type: 'equip', x: 220, y: 150, label: '🚜 50T 크레인' },
-                { type: 'aed', x: 280, y: 220, label: '💚 제1 AED' },
-                { type: 'aed', x: 40, y: 180, label: '💚 제2 AED' }
-            ];
-
-            pins.forEach(pin => {
-                if(filter === 'all' || filter === pin.type) {
-                    ctx.beginPath();
-                    ctx.arc(pin.x, pin.y, 8, 0, Math.PI * 2);
-                    ctx.fillStyle = pin.type === 'risk' ? '#dc3545' : pin.type === 'equip' ? '#ffc107' : '#28a745';
-                    ctx.fill();
-                    ctx.fillStyle = "#000";
-                    ctx.font = "10px sans-serif";
-                    ctx.fillText(pin.label, pin.x - 20, pin.y - 12);
-                }
-            });
         }
 
         window.onload = function() {
