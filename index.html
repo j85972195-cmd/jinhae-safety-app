@@ -30,17 +30,19 @@
         .card-title { font-size: 0.95rem; font-weight: bold; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 6px; }
 
         /* Badges */
-        .badge { padding: 3px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: bold; color: white; display: inline-block; }
+        .badge { padding: 3px 7px; border-radius: 12px; font-size: 0.68rem; font-weight: bold; color: white; display: inline-block; margin-right: 2px; }
         .badge-danger { background-color: #dc3545; }
         .badge-warning { background-color: #ffc107; color: #212529; }
         .badge-info { background-color: #17a2b8; }
         .badge-success { background-color: #28a745; }
         .badge-leader { background-color: #d97706; color: #fff; font-weight: 800; border: 1px solid #b45309; }
+        .badge-senior { background-color: #ea580c; color: #fff; }
+        .badge-supersenior { background-color: #7c2d12; color: #fff; }
 
-        /* Subcard for Subcontractors */
+        /* Subcontractors UI */
         .sub-company-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-bottom: 8px; }
         .sub-company-title { font-size: 0.85rem; font-weight: bold; color: var(--primary-color); border-bottom: 1px solid #cbd5e1; padding-bottom: 4px; margin-bottom: 6px; }
-        .role-group { margin-left: 6px; font-size: 0.8rem; margin-top: 4px; }
+        .role-group { margin-left: 4px; font-size: 0.8rem; margin-top: 4px; }
         .role-title { font-weight: bold; font-size: 0.75rem; color: #475569; margin-top: 4px; }
 
         /* Tab Content */
@@ -78,7 +80,7 @@
         .form-control { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.85rem; }
 
         /* Map Canvas */
-        #siteMapCanvas { width: 100%; height: 260px; background-color: #e5e7eb; border-radius: 8px; border: 1px solid #ccc; display: block; cursor: crosshair; }
+        #siteMapCanvas { width: 100%; height: 280px; background-color: #e5e7eb; border-radius: 8px; border: 1px solid #ccc; display: block; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -105,7 +107,7 @@
                 <div id="highRiskList"></div>
             </div>
 
-            <!-- 협력업체 전용 출근 인원 분리 카드 -->
+            <!-- 협력업체 전용 출근 인원 분리 및 고령자 표출 카드 -->
             <div class="card">
                 <div class="card-title">
                     <span>🏗️ 협력업체별 출근 인원 현황 (원청 제외)</span>
@@ -117,7 +119,7 @@
 
             <div class="card">
                 <div class="card-title">
-                    <span>⚠️ 안전 지적 및 미조치 현황</span>
+                    <span>⚠️ 안전 지적 및 미조치 현황 (지도 연동)</span>
                     <button class="btn btn-primary btn-sm admin-only" style="display:none;" onclick="openIssueForm()">+ 지적 등록</button>
                 </div>
                 <div id="issueList"></div>
@@ -128,7 +130,7 @@
         <div id="tab-work" class="tab-content">
             <div class="card">
                 <div class="card-title">
-                    <span>🚜 반입 장비 현황 및 제원 관리 (지도 연동)</span>
+                    <span>🚜 반입 장비 현황 및 제원 관리</span>
                     <button class="btn btn-primary btn-sm admin-only" style="display:none;" onclick="openEquipForm()">+ 장비 등록</button>
                 </div>
                 <div id="equipmentList"></div>
@@ -146,47 +148,39 @@
         <!-- 3. REPORT TAB (현대건설 시스템 지정 링크) -->
         <div id="tab-report" class="tab-content">
             <div class="card" style="border-left: 4px solid var(--warning-color);">
-                <div class="card-title">
-                    <span>📢 현대건설 공식 안전제보 시스템</span>
-                </div>
+                <div class="card-title"><span>📢 현대건설 공식 안전제보 시스템</span></div>
                 <p style="font-size:0.78rem; color:#666; margin-bottom:12px;">현장 내 위험요소 및 아차사고를 현대건설 공식 안전제보 모바일 시스템을 통해 직접 신고할 수 있습니다.</p>
                 <a href="https://hpms.hdec.co.kr/HDeSP/pSiteSafe/SafetyReport/m/SafetyReportM.aspx?siteCode=I51E&lang=ko&m=1" target="_blank" class="btn btn-warning" style="width:100%; font-size:0.85rem; display:block; box-sizing:border-box;">🔗 현대건설 안전제보 시스템 바로가기</a>
             </div>
         </div>
 
-        <!-- 4. EDUCATION TAB (Safee 지정 링크 및 교육장 연동) -->
+        <!-- 4. EDUCATION TAB (Safee 지정 링크 및 다중 교육장 추가 관리) -->
         <div id="tab-edu" class="tab-content">
             <div class="card" style="border-left: 4px solid var(--primary-color);">
-                <div class="card-title">
-                    <span>🎓 온라인 안전교육 시스템 (Safee)</span>
-                </div>
+                <div class="card-title"><span>🎓 온라인 안전교육 시스템 (Safee)</span></div>
                 <p style="font-size:0.78rem; color:#666; margin-bottom:12px;">스마트 안전교육 플랫폼을 이용하여 근로자 및 관리자 지정 교육을 이수할 수 있습니다.</p>
                 <a href="https://app.safee.kr/main/home" target="_blank" class="btn btn-primary" style="width:100%; font-size:0.85rem; display:block; box-sizing:border-box; margin-bottom:12px;">🔗 Safee 안전교육 바로가기</a>
             </div>
 
-            <!-- 현장 안전교육장 소개 및 위치 연동 섹션 -->
+            <!-- 현장 안전교육장 다중 추가 및 목록 섹션 -->
             <div class="card">
                 <div class="card-title">
-                    <span>🏫 현장 안전교육장 소개 (지도 연동)</span>
-                    <button class="btn btn-outline btn-sm admin-only" style="display:none;" onclick="openEduCenterEdit()">교육장 수정</button>
+                    <span>🏫 현장 안전교육장 목록 (지도 연동)</span>
+                    <button class="btn btn-primary btn-sm admin-only" style="display:none;" onclick="openAddEduCenterForm()">+ 교육장 추가</button>
                 </div>
-                <div id="eduCenterDisplay">
-                    <!-- Dynamic Edu Center Details -->
-                </div>
+                <div id="eduCenterList"></div>
             </div>
         </div>
 
-        <!-- 5. MAP TAB (관리자 수정 및 이미지 첨부/자동 연동) -->
+        <!-- 5. MAP TAB (터치 기반 핀 추가 & 이미지 첨부) -->
         <div id="tab-map" class="tab-content">
             <div class="card">
                 <div class="card-title">
                     <span>🗺️ 인터랙티브 현장지도 (Site Map)</span>
-                    <button class="btn btn-primary btn-sm admin-only" style="display:none;" onclick="openAddPinModal()">+ 핀 추가/수정</button>
                 </div>
 
-                <!-- 관리자용 현장지도 이미지 첨부 기능 -->
                 <div class="admin-only" style="display:none; margin-bottom:8px; background:#edf2f7; padding:8px; border-radius:6px;">
-                    <label style="font-size:0.75rem; font-weight:bold;">🖼️ 전체 현장배치도 이미지 업로드:</label>
+                    <label style="font-size:0.75rem; font-weight:bold;">🖼️ 현장 전체배치도 이미지 변경:</label>
                     <input type="file" id="mapImgUpload" accept="image/*" class="form-control" style="margin-top:4px;" onchange="uploadMapImage(event)">
                 </div>
 
@@ -194,15 +188,19 @@
                     <button class="btn btn-outline btn-sm" onclick="drawMap('all')">전체보기</button>
                     <button class="btn btn-outline btn-sm" onclick="drawMap('risk')">고위험작업</button>
                     <button class="btn btn-outline btn-sm" onclick="drawMap('equip')">반입장비</button>
+                    <button class="btn btn-outline btn-sm" onclick="drawMap('issue')">안전지적</button>
                     <button class="btn btn-outline btn-sm" onclick="drawMap('aed')">AED/교육장</button>
                 </div>
 
-                <canvas id="siteMapCanvas" width="340" height="260"></canvas>
-                <p style="font-size:0.72rem; color:#666; margin-top:6px;">※ 지도 위 추가된 요소는 작업/장비/비상/교육 카테고리에 자동으로 연동됩니다.</p>
+                <p id="mapClickNotice" style="font-size:0.75rem; color:#0d47a1; font-weight:bold; margin-bottom:6px; display:none;">
+                    💡 지도의 원하시는 위치를 직접 터치/클릭하시면 해당 자리에 핀을 즉시 등록할 수 있습니다.
+                </p>
+
+                <canvas id="siteMapCanvas" width="340" height="280" onclick="handleCanvasClick(event)"></canvas>
             </div>
         </div>
 
-        <!-- 6. EMERGENCY TAB (자동 연동 AED 및 비상연락망) -->
+        <!-- 6. EMERGENCY TAB -->
         <div id="tab-emergency" class="tab-content">
             <div class="card" style="background:#fff5f5; border:1px solid #feb2b2;">
                 <div class="card-title"><span style="color:#c53030;">🚨 긴급 비상 전화</span></div>
@@ -225,7 +223,6 @@
                 <div class="item-row"><div><strong>차장 김태의</strong><div style="font-size:0.75rem; color:#666;">📞 010-8007-1925</div></div><a href="tel:010-8007-1925" class="btn btn-primary btn-sm">전화</a></div>
             </div>
 
-            <!-- 자동 연동 AED 위치 안내 -->
             <div class="card">
                 <div class="card-title"><span>💚 AED (자동심장충격기) 현황 (지도 연동)</span></div>
                 <div id="aedListSynced"></div>
@@ -268,57 +265,52 @@
 
     <script>
         let isAdmin = false;
+        let lastClickedX = 150;
+        let lastClickedY = 140;
 
-        // DEFAULT DATA STRUCTURES
+        // DATA INITIALIZATION
         const defaultHighRisks = [
             { id: 1, name: '케이슨 3호 침설 및 수중 작업', area: '1-1공구 전면 해상', risk: '상', status: '진행중' },
             { id: 2, name: '50T 크레인 블록 인양 작업', area: '상부공 육상 야적장', risk: '상', status: '승인완료' }
         ];
 
-        // Workers (원청사 및 협력사 구분)
         const defaultWorkers = [
-            { id: 1, name: '김현대', company: '원청(현대건설)', type: '관리자', job: '토목 안전관리', isLeader: false, status: '출근' },
-            { id: 2, name: '박토건', company: '진해토건', type: '근로자', job: '형틀목공', isLeader: true, status: '출근' },
-            { id: 3, name: '최진해', company: '진해토건', type: '관리자', job: '현장소장', isLeader: false, status: '출근' },
-            { id: 4, name: '이삼영', company: '삼영이앤씨', type: '근로자', job: '굴삭기 운전', isLeader: false, status: '출근' },
-            { id: 5, name: '정삼영', company: '삼영이앤씨', type: '관리자', job: '안전담당자', isLeader: false, status: '출근' }
+            { id: 1, name: '김현대', company: '원청(현대건설)', type: '관리자', job: '토목 안전관리', isLeader: false, isSenior: false, isSuperSenior: false, status: '출근' },
+            { id: 2, name: '박토건', company: '진해토건', type: '근로자', job: '형틀목공', isLeader: true, isSenior: true, isSuperSenior: false, status: '출근' },
+            { id: 3, name: '최진해', company: '진해토건', type: '관리자', job: '현장소장', isLeader: false, isSenior: false, isSuperSenior: false, status: '출근' },
+            { id: 4, name: '이삼영', company: '삼영이앤씨', type: '근로자', job: '굴삭기 운전', isLeader: false, isSenior: false, isSuperSenior: true, status: '출근' }
         ];
 
         const defaultIssues = [
-            { id: 1, title: '크레인 작업구역 통제선 미설치', location: '야적장 B구역', status: '미조치', date: '2026-09-28' }
+            { id: 1, title: '크레인 작업구역 통제선 미설치', location: '야적장 B구역', photo: '', status: '미조치', date: '2026-09-28' }
         ];
 
         const defaultEquip = [
-            { id: 1, name: 'CAT 330 굴삭기', company: '삼영이앤씨', spec: '30톤급', capacity: '1.2m³', status: '반입중' },
-            { id: 2, name: '50T 이동식 크레인', company: '진해토건', spec: '50톤 트럭크레인', capacity: '정격하중 50T', status: '반입중' }
+            { id: 1, name: 'CAT 330 굴삭기', company: '삼영이앤씨', spec: '30톤급', capacity: '1.2m³', status: '반입중' }
         ];
 
-        // Site Map Pins (지도-카테고리 자동 연동 핀)
         const defaultPins = [
             { id: 101, type: 'risk', x: 80, y: 50, label: '케이슨 3호 침설 작업', detail: '해상 전면부' },
-            { id: 102, type: 'equip', x: 220, y: 150, label: 'CAT 330 굴삭기', detail: '삼영이앤씨 / 30톤' },
-            { id: 103, type: 'aed', x: 280, y: 220, label: '제 1 AED', detail: '원청 현장사무실 1층' },
-            { id: 104, type: 'edu', x: 60, y: 180, label: '중앙 안전교육장', detail: '케이슨 제작장 입구' }
+            { id: 102, type: 'equip', x: 220, y: 150, label: 'CAT 330 굴삭기', detail: '삼영이앤씨' },
+            { id: 103, type: 'aed', x: 280, y: 220, label: '제 1 AED', detail: '원청 사무실 1층' },
+            { id: 104, type: 'issue', x: 140, y: 190, label: '통제선 미설치 지적', detail: '야적장 B구역' }
         ];
 
-        const defaultEduCenter = {
-            title: "진해신항 1-1공구 중앙 안전교육장",
-            photo: "", // Base64 DataURL or Image URL
-            desc: "신규 근로자 교육, 일일 TBM, 정기 안전교육을 실시하는 최첨단 스마트 교육 공간입니다. 최대 100명 수용 가능하며 VR 체험기기가 갖춰져 있습니다."
-        };
+        const defaultEduCenters = [
+            { id: 1, title: "제1 안전교육장 (중앙)", photo: "", desc: "신규 근로자 교육 및 TBM 전용 교육장입니다. VR 체험기기 보유." }
+        ];
 
-        // LocalStorage Initializer
         if (!localStorage.getItem('gems_highrisk')) localStorage.setItem('gems_highrisk', JSON.stringify(defaultHighRisks));
-        if (!localStorage.getItem('gems_workers_v3')) localStorage.setItem('gems_workers_v3', JSON.stringify(defaultWorkers));
-        if (!localStorage.getItem('gems_issues')) localStorage.setItem('gems_issues', JSON.stringify(defaultIssues));
-        if (!localStorage.getItem('gems_equip_v3')) localStorage.setItem('gems_equip_v3', JSON.stringify(defaultEquip));
-        if (!localStorage.getItem('gems_pins')) localStorage.setItem('gems_pins', JSON.stringify(defaultPins));
-        if (!localStorage.getItem('gems_educenter')) localStorage.setItem('gems_educenter', JSON.stringify(defaultEduCenter));
+        if (!localStorage.getItem('gems_workers_v4')) localStorage.setItem('gems_workers_v4', JSON.stringify(defaultWorkers));
+        if (!localStorage.getItem('gems_issues_v2')) localStorage.setItem('gems_issues_v2', JSON.stringify(defaultIssues));
+        if (!localStorage.getItem('gems_equip_v4')) localStorage.setItem('gems_equip_v4', JSON.stringify(defaultEquip));
+        if (!localStorage.getItem('gems_pins_v2')) localStorage.setItem('gems_pins_v2', JSON.stringify(defaultPins));
+        if (!localStorage.getItem('gems_educenters')) localStorage.setItem('gems_educenters', JSON.stringify(defaultEduCenters));
 
         function getData(key) { return JSON.parse(localStorage.getItem(key)); }
         function setData(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
 
-        // --- TAB SWITCHING ---
+        // TAB SWITCH
         function switchTab(tabName, element) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
@@ -332,7 +324,7 @@
             }
         }
 
-        // --- AUTH CONTROL ---
+        // AUTH CONTROL
         function toggleAuth() {
             if (!isAdmin) {
                 const pass = prompt("관리자 비밀번호를 입력하세요 (테스트: 1234):");
@@ -352,11 +344,12 @@
             renderAll();
         }
 
-        // --- RENDER ALL SECTIONS WITH SUBCONTRACTOR SEPARATION & SYNC ---
+        // RENDER ALL
         function renderAll() {
             document.querySelectorAll('.admin-only').forEach(el => el.style.display = isAdmin ? 'inline-block' : 'none');
+            document.getElementById('mapClickNotice').style.display = isAdmin ? 'block' : 'none';
 
-            // 1. High Risk (Home Dashboard)
+            // 1. High Risk
             const hrList = getData('gems_highrisk');
             document.getElementById('highRiskList').innerHTML = hrList.map(item => `
                 <div class="item-row">
@@ -371,11 +364,9 @@
                 </div>
             `).join('');
 
-            // 2. Subcontractor Worker Grouping (EXCLUDING 원청)
-            const workers = getData('gems_workers_v3');
+            // 2. Subcontractors Workers (Exclude 원청, Include 고령자/초고령자/수정)
+            const workers = getData('gems_workers_v4');
             const subWorkers = workers.filter(w => !w.company.includes('현대건설') && !w.company.includes('원청'));
-            
-            // Subcontractor Companies list
             const subCompanies = [...new Set(subWorkers.map(w => w.company))];
             
             let totalSubCount = subWorkers.filter(w => w.status === '출근').length;
@@ -393,27 +384,33 @@
                     <div class="sub-company-card">
                         <div class="sub-company-title">🏢 ${comp} (출근: ${compWorkers.length}명)</div>
                         
-                        <!-- 소분류 1: 관리자 -->
                         <div class="role-title">👤 관리자 (${managers.length}명)</div>
                         <div class="role-group">
-                            ${managers.length === 0 ? '<div style="font-size:0.75rem; color:#aaa;">출근 인원 없음</div>' : ''}
+                            ${managers.length === 0 ? '<div style="font-size:0.75rem; color:#aaa;">출근 없음</div>' : ''}
                             ${managers.map(m => `
                                 <div class="item-row">
-                                    <span>${m.name} (${m.job})</span>${isAdmin ? `<button class="btn btn-danger btn-sm" onclick="deleteWorker(${m.id})">삭제</button>` : ''}
+                                    <span>${m.name} (${m.job})</span>${isAdmin ? `<div>
+                                        <button class="btn btn-outline btn-sm" onclick="openWorkerForm(${m.id})">수정</button>
+                                        <button class="btn btn-danger btn-sm" onclick="deleteWorker(${m.id})">삭제</button>
+                                    </div>` : ''}
                                 </div>
                             `).join('')}
                         </div>
 
-                        <!-- 소분류 2: 근로자 및 작업반장 -->
                         <div class="role-title" style="margin-top:6px;">👷 근로자 (${fieldWorkers.length}명)</div>
                         <div class="role-group">
-                            ${fieldWorkers.length === 0 ? '<div style="font-size:0.75rem; color:#aaa;">출근 인원 없음</div>' : ''}
+                            ${fieldWorkers.length === 0 ? '<div style="font-size:0.75rem; color:#aaa;">출근 없음</div>' : ''}
                             ${fieldWorkers.map(w => `
                                 <div class="item-row ${w.isLeader ? 'leader-row' : ''}">
                                     <span>
                                         <strong>${w.name}</strong> (${w.job})${w.isLeader ? '<span class="badge badge-leader">👑 작업반장</span>' : ''}
+                                        ${w.isSenior ? '<span class="badge badge-senior">고령자</span>' : ''}
+                                        ${w.isSuperSenior ? '<span class="badge badge-supersenior">초고령자</span>' : ''}
                                     </span>
-                                    ${isAdmin ? `<button class="btn btn-danger btn-sm" onclick="deleteWorker(${w.id})">삭제</button>` : ''}
+                                    ${isAdmin ? `<div>
+                                        <button class="btn btn-outline btn-sm" onclick="openWorkerForm(${w.id})">수정</button>
+                                        <button class="btn btn-danger btn-sm" onclick="deleteWorker(${w.id})">삭제</button>
+                                    </div>` : ''}
                                 </div>
                             `).join('')}
                         </div>
@@ -422,8 +419,24 @@
             });
             document.getElementById('subcontractorWorkerGroup').innerHTML = subHTML || '<p style="font-size:0.8rem; color:#888;">등록된 협력업체가 없습니다.</p>';
 
-            // 3. Equipment Sync & Render
-            const equip = getData('gems_equip_v3');
+            // 3. Issues List
+            const issues = getData('gems_issues_v2');
+            document.getElementById('issueList').innerHTML = issues.map(i => `
+                <div class="item-row">
+                    <div>
+                        <strong>${i.title}</strong>
+                        <div style="font-size:0.75rem; color:#666;">장소: ${i.location} | 등록일: ${i.date}</div>
+                        ${i.photo ? `<img src="${i.photo}" style="width:60px; height:60px; object-fit:cover; border-radius:4px; margin-top:4px;">` : ''}
+                    </div>
+                    <div>
+                        <span class="badge ${i.status === '미조치' ? 'badge-danger' : 'badge-success'}">${i.status}</span>
+                        ${isAdmin ? `<button class="btn btn-danger btn-sm" onclick="deleteIssue(${i.id})">삭제</button>` : ''}
+                    </div>
+                </div>
+            `).join('');
+
+            // 4. Equipment
+            const equip = getData('gems_equip_v4');
             document.getElementById('equipmentList').innerHTML = equip.map(e => `
                 <div class="item-row">
                     <div>
@@ -437,43 +450,106 @@
                 </div>
             `).join('');
 
-            // 4. Edu Center Sync (Education Tab)
-            const eduCenter = getData('gems_educenter');
-            document.getElementById('eduCenterDisplay').innerHTML = `
-                <div style="font-size:0.85rem; font-weight:bold; margin-bottom:6px;">${eduCenter.title}</div>
-                ${eduCenter.photo ? `<img src="${eduCenter.photo}" style="width:100%; height:160px; object-fit:cover; border-radius:8px; margin-bottom:8px;">` : '<div style="width:100%; height:100px; background:#e2e8f0; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#64748b; font-size:0.78rem; margin-bottom:8px;">등록된 교육장 전경 사진이 없습니다.</div>'}
-                <p style="font-size:0.8rem; color:#475569; line-height:1.4;">${eduCenter.desc}</p>
-            `;
+            // 5. Multi Edu Centers
+            const eduCenters = getData('gems_educenters');
+            document.getElementById('eduCenterList').innerHTML = eduCenters.map(ec => `
+                <div class="item-row" style="flex-direction:column; align-items:flex-start;">
+                    <div style="display:flex; justify-content:space-between; width:100%;">
+                        <strong>${ec.title}</strong>
+                        ${isAdmin ? `<div>
+                            <button class="btn btn-outline btn-sm" onclick="openAddEduCenterForm(${ec.id})">수정</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteEduCenter(${ec.id})">삭제</button>
+                        </div>` : ''}
+                    </div>
+                    ${ec.photo ? `<img src="${ec.photo}" style="width:100%; height:130px; object-fit:cover; border-radius:6px; margin:6px 0;">` : ''}
+                    <p style="font-size:0.78rem; color:#555;">${ec.desc}</p>
+                </div>
+            `).join('');
 
-            // 5. AED Sync (Emergency Tab)
-            const pins = getData('gems_pins');
+            // 6. AED Sync
+            const pins = getData('gems_pins_v2');
             const aedPins = pins.filter(p => p.type === 'aed');
             document.getElementById('aedListSynced').innerHTML = aedPins.map(p => `
                 <div class="item-row">
                     <div>
                         <strong>💚 ${p.label}</strong>
-                        <div style="font-size:0.75rem; color:#666;">위치: ${p.detail} (지도 연동됨)</div>
+                        <div style="font-size:0.75rem; color:#666;">위치: ${p.detail} (지도 연동)</div>
                     </div>
                     <button class="btn btn-outline btn-sm" onclick="alert('AED 위치: ${p.detail}')">위치확인</button>
                 </div>
             `).join('');
         }
 
-        // --- MAP CANVAS & ADMIN CUSTOMIZATION ---
-        let uploadedMapImage = null;
+        // TOUCH CANVAS CLICK TO ADD PIN DIRECTLY
+        function handleCanvasClick(e) {
+            if (!isAdmin) return;
 
+            const canvas = document.getElementById('siteMapCanvas');
+            const rect = canvas.getBoundingClientRect();
+            lastClickedX = Math.round(e.clientX - rect.left);
+            lastClickedY = Math.round(e.clientY - rect.top);
+
+            openModal('📍 터치 위치에 핀 추가 (자동 연동)', `
+                <div style="font-size:0.78rem; color:#0d47a1; margin-bottom:8px;">
+                    선택 좌표: X: ${lastClickedX}, Y: ${lastClickedY}
+                </div>
+                <div class="form-group"><label>구분 (연동 카테고리)</label>
+                    <select id="pinType" class="form-control">
+                        <option value="risk">고위험작업 (작업안전 연동)</option>
+                        <option value="equip">반입장비 (장비관리 연동)</option>
+                        <option value="issue">안전지적 (지적현황 연동)</option>
+                        <option value="aed">AED (비상연락 연동)</option>
+                        <option value="edu">안전교육장 (안전교육 연동)</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>명칭</label><input type="text" id="pinLabel" class="form-control" placeholder="예: 50T 크레인 인양"></div>
+                <div class="form-group"><label>상세 위치설명</label><input type="text" id="pinDetail" class="form-control" placeholder="예: 야적장 B구역"></div>
+                <button class="btn btn-primary" style="width:100%; margin-top:10px;" onclick="saveMapPinDirect()">핀 저장 및 자동 연동</button>
+            `);
+        }
+
+        function saveMapPinDirect() {
+            const type = document.getElementById('pinType').value;
+            const label = document.getElementById('pinLabel').value;
+            const detail = document.getElementById('pinDetail').value;
+
+            if (!label) return alert('명칭을 입력하세요.');
+
+            let pins = getData('gems_pins_v2');
+            pins.push({ id: Date.now(), type, x: lastClickedX, y: lastClickedY, label, detail });
+            setData('gems_pins_v2', pins);
+
+            // AUTO SYNC
+            if (type === 'risk') {
+                let hr = getData('gems_highrisk');
+                hr.push({ id: Date.now(), name: label, area: detail, risk: '상', status: '진행중' });
+                setData('gems_highrisk', hr);
+            } else if (type === 'equip') {
+                let eq = getData('gems_equip_v4');
+                eq.push({ id: Date.now(), name: label, company: '협력사', spec: detail, capacity: '규격', status: '반입중' });
+                setData('gems_equip_v4', eq);
+            } else if (type === 'issue') {
+                let is = getData('gems_issues_v2');
+                is.push({ id: Date.now(), title: label, location: detail, photo: '', status: '미조치', date: '2026-09-28' });
+                setData('gems_issues_v2', is);
+            }
+
+            closeModal();
+            renderAll();
+            drawMap('all');
+            alert('지정한 위치에 핀이 추가되었으며 해당 카테고리에 실시간 연동되었습니다.');
+        }
+
+        // MAP DRAWING
+        let uploadedMapImage = null;
         function uploadMapImage(e) {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(event) {
+                reader.onload = function(evt) {
                     const img = new Image();
-                    img.onload = function() {
-                        uploadedMapImage = img;
-                        drawMap('all');
-                        alert('전체 현장배치도 이미지가 새로 적용되었습니다.');
-                    };
-                    img.src = event.target.result;
+                    img.onload = function() { uploadedMapImage = img; drawMap('all'); };
+                    img.src = evt.target.result;
                 };
                 reader.readAsDataURL(file);
             }
@@ -489,29 +565,25 @@
             if (uploadedMapImage) {
                 ctx.drawImage(uploadedMapImage, 0, 0, canvas.width, canvas.height);
             } else {
-                // Default Map Drawing
                 ctx.fillStyle = "#e5e7eb";
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
-
                 ctx.fillStyle = "#93c5fd";
                 ctx.fillRect(0, 0, canvas.width, 80);
                 ctx.fillStyle = "#1e3a8a";
                 ctx.font = "11px sans-serif";
                 ctx.fillText("🌊 부산 진해신항 해상 구역 (1-1공구)", 10, 20);
-
                 ctx.fillStyle = "#cbd5e1";
-                ctx.fillRect(10, 90, 320, 160);
+                ctx.fillRect(10, 90, 320, 180);
                 ctx.fillStyle = "#334155";
                 ctx.fillText("🏗️ 육상 야적장 및 제작장 배치도", 20, 110);
             }
 
-            // Draw Pins
-            const pins = getData('gems_pins');
+            const pins = getData('gems_pins_v2');
             pins.forEach(pin => {
                 if (filter === 'all' || filter === pin.type) {
                     ctx.beginPath();
                     ctx.arc(pin.x, pin.y, 9, 0, Math.PI * 2);
-                    ctx.fillStyle = pin.type === 'risk' ? '#dc3545' : pin.type === 'equip' ? '#f59e0b' : pin.type === 'aed' ? '#10b981' : '#3b82f6';
+                    ctx.fillStyle = pin.type === 'risk' ? '#dc3545' : pin.type === 'equip' ? '#f59e0b' : pin.type === 'issue' ? '#a855f7' : pin.type === 'aed' ? '#10b981' : '#3b82f6';
                     ctx.fill();
                     ctx.lineWidth = 2;
                     ctx.strokeStyle = '#ffffff';
@@ -524,69 +596,129 @@
             });
         }
 
-        // --- MAP PINS ADDITION & CATEGORY AUTO SYNC ---
-        function openAddPinModal() {
-            openModal('📍 현장지도 핀 추가 (자동 카테고리 연동)', `
-                <div class="form-group"><label>구분 (연동 카테고리)</label>
-                    <select id="pinType" class="form-control">
-                        <option value="risk">고위험작업 (작업안전 연동)</option>
-                        <option value="equip">반입장비 (장비관리 연동)</option>
-                        <option value="aed">AED (비상연락 연동)</option>
-                        <option value="edu">안전교육장 (안전교육 연동)</option>
+        // WORKER FORM (등록 및 수정 / 작업반장 & 고령자 강조)
+        function openWorkerForm(id = null) {
+            const list = getData('gems_workers_v4');
+            const w = id ? list.find(x => x.id === id) : { name: '', company: '진해토건', type: '근로자', job: '', isLeader: false, isSenior: false, isSuperSenior: false };
+
+            openModal(id ? '협력업체 인원 정보 수정' : '신규 협력업체 인원 등록', `
+                <div class="form-group"><label>성명</label><input type="text" id="wkName" class="form-control" value="${w.name}"></div>
+                <div class="form-group"><label>협력업체명</label><input type="text" id="wkCompany" class="form-control" value="${w.company}"></div>
+                <div class="form-group"><label>구분</label>
+                    <select id="wkType" class="form-control">
+                        <option value="근로자" ${w.type==='근로자'?'selected':''}>근로자</option>
+                        <option value="관리자" ${w.type==='관리자'?'selected':''}>관리자</option>
                     </select>
                 </div>
-                <div class="form-group"><label>명칭</label><input type="text" id="pinLabel" class="form-control" placeholder="예: 100T 크레인 양중"></div>
-                <div class="form-group"><label>상세 위치설명</label><input type="text" id="pinDetail" class="form-control" placeholder="예: 케이슨 B구역"></div>
-                <div class="form-group"><label>X 좌표 (10~300)</label><input type="number" id="pinX" class="form-control" value="150"></div>
-                <div class="form-group"><label>Y 좌표 (10~240)</label><input type="number" id="pinY" class="form-control" value="120"></div>
-                <button class="btn btn-primary" style="width:100%; margin-top:10px;" onclick="saveMapPin()">핀 추가 및 카테고리 연동</button>
+                <div class="form-group"><label>직종/공종</label><input type="text" id="wkJob" class="form-control" value="${w.job}"></div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="wkLeader" ${w.isLeader?'checked':''}> 👑 공종별 작업반장 지정 (황금색 강조)</label>
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="wkSenior" ${w.isSenior?'checked':''}> 만 60세 이상 (고령자 지정)</label>
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="wkSuperSenior" ${w.isSuperSenior?'checked':''}> 만 65세 이상 (초고령자 지정)</label>
+                </div>
+                <button class="btn btn-primary" style="width:100%; margin-top:10px;" onclick="saveWorker(${id})">저장하기</button>
             `);
         }
 
-        function saveMapPin() {
-            const type = document.getElementById('pinType').value;
-            const label = document.getElementById('pinLabel').value;
-            const detail = document.getElementById('pinDetail').value;
-            const x = parseInt(document.getElementById('pinX').value);
-            const y = parseInt(document.getElementById('pinY').value);
+        function saveWorker(id) {
+            let list = getData('gems_workers_v4');
+            const name = document.getElementById('wkName').value;
+            const company = document.getElementById('wkCompany').value;
+            const type = document.getElementById('wkType').value;
+            const job = document.getElementById('wkJob').value;
+            const isLeader = document.getElementById('wkLeader').checked;
+            const isSenior = document.getElementById('wkSenior').checked;
+            const isSuperSenior = document.getElementById('wkSuperSenior').checked;
 
-            if (!label) return alert('명칭을 입력하세요.');
+            if(!name || !company) return alert('성명과 업체명을 입력하세요.');
 
-            let pins = getData('gems_pins');
-            const newPin = { id: Date.now(), type, x, y, label, detail };
-            pins.push(newPin);
-            setData('gems_pins', pins);
-
-            // AUTO SYNC WITH CATEGORIES
-            if (type === 'risk') {
-                let highRisks = getData('gems_highrisk');
-                highRisks.push({ id: Date.now(), name: label, area: detail, risk: '상', status: '진행중' });
-                setData('gems_highrisk', highRisks);
-            } else if (type === 'equip') {
-                let equips = getData('gems_equip_v3');
-                equips.push({ id: Date.now(), name: label, company: '협력사', spec: detail, capacity: '정격용량', status: '반입중' });
-                setData('gems_equip_v3', equips);
+            if(id) {
+                const idx = list.findIndex(x => x.id === id);
+                list[idx] = { id, name, company, type, job, isLeader, isSenior, isSuperSenior, status: '출근' };
+            } else {
+                list.push({ id: Date.now(), name, company, type, job, isLeader, isSenior, isSuperSenior, status: '출근' });
             }
-
+            setData('gems_workers_v4', list);
             closeModal();
             renderAll();
-            drawMap('all');
-            alert('새로운 핀이 추가되었으며 해당 카테고리와 자동으로 연동되었습니다.');
         }
 
-        // --- EDU CENTER EDIT MODAL ---
-        function openEduCenterEdit() {
-            const edu = getData('gems_educenter');
-            openModal('🏫 안전교육장 소개 수정', `
-                <div class="form-group"><label>교육장 명칭</label><input type="text" id="edTitle" class="form-control" value="${edu.title}"></div>
-                <div class="form-group"><label>교육장 소개 문구</label><textarea id="edDesc" class="form-control" rows="3">${edu.desc}</textarea></div>
-                <div class="form-group"><label>전경 사진 첨부</label><input type="file" id="edPhotoFile" accept="image/*" class="form-control" onchange="convertEduPhoto(event)"></div>
-                <button class="btn btn-primary" style="width:100%; margin-top:10px;" onclick="saveEduCenter()">저장하기</button>
+        function deleteWorker(id) {
+            if(confirm('삭제하시겠습니까?')) {
+                let list = getData('gems_workers_v4').filter(x => x.id !== id);
+                setData('gems_workers_v4', list);
+                renderAll();
+            }
+        }
+
+        // ISSUE FORM (사진 첨부 및 지도 핀 연동)
+        function openIssueForm() {
+            openModal('⚠️ 지적 및 미조치 사항 등록 (지도 자동연동)', `
+                <div class="form-group"><label>지적 제목</label><input type="text" id="isTitle" class="form-control" placeholder="예: 난간대 미설치"></div>
+                <div class="form-group"><label>위치</label><input type="text" id="isLoc" class="form-control" placeholder="예: 케이슨 B구역"></div>
+                <div class="form-group"><label>현장 사진 첨부</label><input type="file" id="isPhotoFile" accept="image/*" class="form-control" onchange="convertIssuePhoto(event)"></div>
+                <button class="btn btn-primary" style="width:100%; margin-top:10px;" onclick="saveIssue()">등록 및 지도 연동</button>
+            `);
+        }
+
+        let tempIssuePhoto = "";
+        function convertIssuePhoto(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) { tempIssuePhoto = evt.target.result; };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function saveIssue() {
+            let issues = getData('gems_issues_v2');
+            const title = document.getElementById('isTitle').value;
+            const location = document.getElementById('isLoc').value;
+
+            if(!title) return alert('제목을 입력하세요.');
+
+            issues.push({ id: Date.now(), title, location, photo: tempIssuePhoto, status: '미조치', date: '2026-09-28' });
+            setData('gems_issues_v2', issues);
+
+            // AUTO SYNC TO MAP
+            let pins = getData('gems_pins_v2');
+            pins.push({ id: Date.now(), type: 'issue', x: 150, y: 150, label: title, detail: location });
+            setData('gems_pins_v2', pins);
+
+            tempIssuePhoto = "";
+            closeModal();
+            renderAll();
+            alert('지적사항이 등록되었으며 현장 지도에 핀이 자동 표출됩니다.');
+        }
+
+        function deleteIssue(id) {
+            if(confirm('삭제하시겠습니까?')) {
+                let issues = getData('gems_issues_v2').filter(x => x.id !== id);
+                setData('gems_issues_v2', issues);
+                renderAll();
+            }
+        }
+
+        // MULTI EDU CENTER FORM
+        function openAddEduCenterForm(id = null) {
+            const list = getData('gems_educenters');
+            const ec = id ? list.find(x => x.id === id) : { title: '', desc: '', photo: '' };
+
+            openModal(id ? '안전교육장 수정' : '신규 안전교육장 추가', `
+                <div class="form-group"><label>교육장 명칭</label><input type="text" id="ecTitle" class="form-control" value="${ec.title}"></div>
+                <div class="form-group"><label>소개 설명</label><textarea id="ecDesc" class="form-control" rows="3">${ec.desc}</textarea></div>
+                <div class="form-group"><label>전경 사진 첨부</label><input type="file" accept="image/*" class="form-control" onchange="convertEduCenterPhoto(event)"></div>
+                <button class="btn btn-primary" style="width:100%; margin-top:10px;" onclick="saveEduCenter(${id})">저장하기</button>
             `);
         }
 
         let tempEduPhoto = "";
-        function convertEduPhoto(e) {
+        function convertEduCenterPhoto(e) {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
@@ -595,16 +727,31 @@
             }
         }
 
-        function saveEduCenter() {
-            let edu = getData('gems_educenter');
-            edu.title = document.getElementById('edTitle').value;
-            edu.desc = document.getElementById('edDesc').value;
-            if (tempEduPhoto) edu.photo = tempEduPhoto;
+        function saveEduCenter(id) {
+            let list = getData('gems_educenters');
+            const title = document.getElementById('ecTitle').value;
+            const desc = document.getElementById('ecDesc').value;
 
-            setData('gems_educenter', edu);
+            if(!title) return alert('명칭을 입력하세요.');
+
+            if(id) {
+                const idx = list.findIndex(x => x.id === id);
+                list[idx] = { id, title, desc, photo: tempEduPhoto || list[idx].photo };
+            } else {
+                list.push({ id: Date.now(), title, desc, photo: tempEduPhoto });
+            }
+            setData('gems_educenters', list);
+            tempEduPhoto = "";
             closeModal();
             renderAll();
-            alert('안전교육장 정보가 성공적으로 수정되었습니다.');
+        }
+
+        function deleteEduCenter(id) {
+            if(confirm('해당 교육장을 삭제하시겠습니까?')) {
+                let list = getData('gems_educenters').filter(x => x.id !== id);
+                setData('gems_educenters', list);
+                renderAll();
+            }
         }
 
         // MODAL UTILS
@@ -616,47 +763,6 @@
 
         function closeModal() {
             document.getElementById('globalModal').classList.remove('active');
-        }
-
-        // CRUD HELPER FOR WORKERS
-        function openWorkerForm() {
-            openModal('신규 협력업체 인원 등록', `
-                <div class="form-group"><label>성명</label><input type="text" id="wkName" class="form-control"></div>
-                <div class="form-group"><label>협력업체명</label><input type="text" id="wkCompany" class="form-control" placeholder="예: 진해토건"></div>
-                <div class="form-group"><label>구분</label>
-                    <select id="wkType" class="form-control">
-                        <option value="근로자">근로자</option>
-                        <option value="관리자">관리자</option>
-                    </select>
-                </div>
-                <div class="form-group"><label>직종/공종</label><input type="text" id="wkJob" class="form-control" placeholder="예: 형틀목공"></div>
-                <div class="form-group"><label><input type="checkbox" id="wkLeader"> 공종별 작업반장 지정</label></div>
-                <button class="btn btn-primary" style="width:100%; margin-top:10px;" onclick="saveWorker()">등록하기</button>
-            `);
-        }
-
-        function saveWorker() {
-            let list = getData('gems_workers_v3');
-            const name = document.getElementById('wkName').value;
-            const company = document.getElementById('wkCompany').value;
-            const type = document.getElementById('wkType').value;
-            const job = document.getElementById('wkJob').value;
-            const isLeader = document.getElementById('wkLeader').checked;
-
-            if (!name || !company) return alert('성명과 협력업체명을 입력하세요.');
-
-            list.push({ id: Date.now(), name, company, type, job, isLeader, status: '출근' });
-            setData('gems_workers_v3', list);
-            closeModal();
-            renderAll();
-        }
-
-        function deleteWorker(id) {
-            if (confirm('삭제하시겠습니까?')) {
-                let list = getData('gems_workers_v3').filter(x => x.id !== id);
-                setData('gems_workers_v3', list);
-                renderAll();
-            }
         }
 
         window.onload = function() {
