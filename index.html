@@ -47,18 +47,18 @@
         .leader-row { background-color: #fffbe3; border-left: 4px solid #f59e0b; padding-left: 8px; margin-bottom: 4px; border-radius: 4px; }
 
         /* Buttons */
-        .btn { padding: 7px 12px; border: none; border-radius: 6px; font-size: 0.78rem; font-weight: bold; cursor: pointer; text-align: center; display: inline-block; }
+        .btn { padding: 7px 12px; border: none; border-radius: 6px; font-size: 0.78rem; font-weight: bold; cursor: pointer; text-align: center; display: inline-block; text-decoration: none; }
         .btn-primary { background: var(--primary-color); color: white; }
         .btn-danger { background: var(--accent-color); color: white; }
         .btn-warning { background: var(--warning-color); color: #212529; }
         .btn-outline { background: transparent; border: 1px solid var(--primary-color); color: var(--primary-color); }
         .btn-sm { padding: 4px 8px; font-size: 0.72rem; }
 
-        /* Bottom Nav */
+        /* Bottom Nav (6 Tabs) */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: #ffffff; display: flex; border-top: 1px solid #ddd; z-index: 1000; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.72rem; color: #666; text-decoration: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.65rem; color: #666; text-decoration: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
         .nav-item.active { color: var(--primary-color); font-weight: bold; }
-        .nav-icon { font-size: 1.1rem; margin-bottom: 2px; }
+        .nav-icon { font-size: 1.05rem; margin-bottom: 2px; }
 
         /* Modal Sheet */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: flex-end; flex-direction: column; }
@@ -129,45 +129,40 @@
 
             <div class="card">
                 <div class="card-title"><span>📚 TBM 및 안전교육 라이브러리</span></div>
-                <input type="text" id="eduSearch" class="form-control" placeholder="교육 자료/수칙 검색..." onkeyup="filterEduDocs()" style="margin-bottom:10px;">
-                <div id="eduList">
-                    <div class="item-row">
-                        <div><strong>[TBM] 케이슨 침설작업 안전수칙</strong><div style="font-size:0.75rem; color:#666;">해상작업 / 구명조끼 착용 / 신호수 배치</div></div>
-                        <button class="btn btn-outline btn-sm" onclick="alert('PDF 열기: 케이슨 침설작업 안전수칙.pdf')">보기</button>
-                    </div>
-                    <div class="item-row">
-                        <div><strong>[장비] 50T 크레인 인양 양중 가이드</strong><div style="font-size:0.75rem; color:#666;">신호체계 / 아웃트리거 받침목 확인</div></div>
-                        <button class="btn btn-outline btn-sm" onclick="alert('PDF 열기: 크레인 작업가이드.pdf')">보기</button>
-                    </div>
+                <div class="item-row">
+                    <div><strong>[TBM] 케이슨 침설작업 안전수칙</strong><div style="font-size:0.75rem; color:#666;">해상작업 / 구명조끼 착용 / 신호수 배치</div></div>
+                    <button class="btn btn-outline btn-sm" onclick="alert('PDF 열기: 케이슨 침설작업 안전수칙.pdf')">보기</button>
+                </div>
+                <div class="item-row">
+                    <div><strong>[장비] 50T 크레인 인양 양중 가이드</strong><div style="font-size:0.75rem; color:#666;">신호체계 / 아웃트리거 받침목 확인</div></div>
+                    <button class="btn btn-outline btn-sm" onclick="alert('PDF 열기: 크레인 작업가이드.pdf')">보기</button>
                 </div>
             </div>
         </div>
 
-        <!-- 3. REPORT TAB (안전제보 / 위험신고 / 작업중지) -->
+        <!-- 3. REPORT TAB (현대건설 시스템 지정 링크) -->
         <div id="tab-report" class="tab-content">
             <div class="card" style="border-left: 4px solid var(--warning-color);">
                 <div class="card-title">
-                    <span>📢 위험요인 신고 및 아차사고 접수</span>
+                    <span>📢 현대건설 공식 안전제보 시스템</span>
                 </div>
-                <p style="font-size:0.78rem; color:#666; margin-bottom:10px;">현장 내 위험요소 또는 아차사고를 발견 즉시 신고해 주세요.</p>
-                <button class="btn btn-warning" style="width:100%; font-size:0.85rem;" onclick="openReportModal()">📸 위험요인 / 아차사고 신고하기</button>
-            </div>
-
-            <div class="card" style="border-left: 4px solid var(--accent-color);">
-                <div class="card-title">
-                    <span style="color:var(--accent-color);">✋ 근로자 작업중지 요청</span>
-                </div>
-                <p style="font-size:0.78rem; color:#666; margin-bottom:10px;">산업재해 발생의 급박한 위험이 있는 경우 즉시 작업을 중지하고 요청할 수 있습니다.</p>
-                <button class="btn btn-danger" style="width:100%; font-size:0.85rem;" onclick="openWorkStopModal()">🚨 작업중지 즉시 요청</button>
-            </div>
-
-            <div class="card">
-                <div class="card-title"><span>📋 접수된 제보 및 신고 목록</span></div>
-                <div id="reportList"></div>
+                <p style="font-size:0.78rem; color:#666; margin-bottom:12px;">현장 내 위험요요소 및 아차사고를 현대건설 공식 안전제보 모바일 시스템을 통해 직접 신고할 수 있습니다.</p>
+                <a href="https://hpms.hdec.co.kr/HDeSP/pSiteSafe/SafetyReport/m/SafetyReportM.aspx?siteCode=I51E&lang=ko&m=1" target="_blank" class="btn btn-warning" style="width:100%; font-size:0.85rem; display:block; box-sizing:border-box;">🔗 현대건설 안전제보 시스템 바로가기</a>
             </div>
         </div>
 
-        <!-- 4. MAP TAB (인터랙티브 현장 지도) -->
+        <!-- 4. EDUCATION TAB (Safee 지정 링크) -->
+        <div id="tab-edu" class="tab-content">
+            <div class="card" style="border-left: 4px solid var(--primary-color);">
+                <div class="card-title">
+                    <span>🎓 온라인 안전교육 시스템 (Safee)</span>
+                </div>
+                <p style="font-size:0.78rem; color:#666; margin-bottom:12px;">스마트 안전교육 플랫폼을 이용하여 근로자 및 관리자 지정 교육을 이수할 수 있습니다.</p>
+                <a href="https://app.safee.kr/main/home" target="_blank" class="btn btn-primary" style="width:100%; font-size:0.85rem; display:block; box-sizing:border-box;">🔗 Safee 안전교육 바로가기</a>
+            </div>
+        </div>
+
+        <!-- 5. MAP TAB (인터랙티브 현장 지도) -->
         <div id="tab-map" class="tab-content">
             <div class="card">
                 <div class="card-title">
@@ -184,34 +179,56 @@
             </div>
         </div>
 
-        <!-- 5. EMERGENCY TAB (응급·비상대응) -->
+        <!-- 6. EMERGENCY TAB (팀별 세부 비상연락망) -->
         <div id="tab-emergency" class="tab-content">
             <div class="card" style="background:#fff5f5; border:1px solid #feb2b2;">
-                <div class="card-title"><span style="color:#c53030;">🚨 긴급 비상 연락</span></div>
+                <div class="card-title"><span style="color:#c53030;">🚨 긴급 비상 전화</span></div>
                 <button class="btn btn-danger" style="width:100%; padding:12px; font-size:1rem; margin-bottom:8px;" onclick="location.href='tel:119'">📞 119 응급환자 신고 (즉시 연결)</button>
-                <button class="btn btn-primary" style="width:100%; padding:10px;" onclick="location.href='tel:055-123-4567'">☎️ 현장 안전팀 종합상황실 Call</button>
             </div>
 
+            <!-- 안전팀 비상연락망 -->
             <div class="card">
-                <div class="card-title"><span>💚 AED (자동심장충격기) 위치 & 동선</span></div>
+                <div class="card-title"><span>🛡️ 안전팀 비상연락망</span></div>
+                <div class="item-row">
+                    <div><strong>팀장 방기동</strong><div style="font-size:0.75rem; color:#666;">📞 010-7578-3117</div></div>
+                    <a href="tel:010-7578-3117" class="btn btn-primary btn-sm">전화 걸기</a>
+                </div>
+                <div class="item-row">
+                    <div><strong>차장 정인교</strong><div style="font-size:0.75rem; color:#666;">📞 010-9301-2265</div></div>
+                    <a href="tel:010-9301-2265" class="btn btn-primary btn-sm">전화 걸기</a>
+                </div>
+                <div class="item-row">
+                    <div><strong>차장 이재명</strong><div style="font-size:0.75rem; color:#666;">📞 010-7923-0407</div></div>
+                    <a href="tel:010-7923-0407" class="btn btn-primary btn-sm">전화 걸기</a>
+                </div>
+            </div>
+
+            <!-- 수행팀 비상연락망 -->
+            <div class="card">
+                <div class="card-title"><span>⚙️ 수행팀 비상연락망</span></div>
+                <div class="item-row">
+                    <div><strong>팀장 김정규</strong><div style="font-size:0.75rem; color:#666;">📞 010-2306-0069</div></div>
+                    <a href="tel:010-2306-0069" class="btn btn-primary btn-sm">전화 걸기</a>
+                </div>
+                <div class="item-row">
+                    <div><strong>차장 김광석</strong><div style="font-size:0.75rem; color:#666;">📞 010-4194-0110</div></div>
+                    <a href="tel:010-4194-0110" class="btn btn-primary btn-sm">전화 걸기</a>
+                </div>
+                <div class="item-row">
+                    <div><strong>차장 김태의</strong><div style="font-size:0.75rem; color:#666;">📞 010-8007-1925</div></div>
+                    <a href="tel:010-8007-1925" class="btn btn-primary btn-sm">전화 걸기</a>
+                </div>
+            </div>
+
+            <!-- AED 위치 안내 -->
+            <div class="card">
+                <div class="card-title"><span>💚 AED (자동심장충격기) 위치</span></div>
                 <div class="item-row">
                     <div><strong>제 1 AED: 원청 현장사무실 1층 로비</strong><div style="font-size:0.75rem; color:#666;">도보 2분 거리 | 24시간 개방</div></div>
-                    <button class="btn btn-outline btn-sm" onclick="alert('원청 사무실 1층 입구 우측 벽면에 설치되어 있습니다.')">위치보기</button>
                 </div>
                 <div class="item-row">
                     <div><strong>제 2 AED: 케이슨 제작장 안전교육장</strong><div style="font-size:0.75rem; color:#666;">도보 4분 거리 | 구급함 동체 보관</div></div>
-                    <button class="btn btn-outline btn-sm" onclick="alert('케이슨 제작장 입구 안전교육장 내부에 위치해 있습니다.')">위치보기</button>
                 </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title"><span>📘 중대재해 발생 시 초동 대응 매뉴얼</span></div>
-                <ol style="font-size:0.8rem; padding-left:18px; line-height:1.6; color:#444;">
-                    <li><strong>작업 즉시 중지 및 2차 재해 예방</strong> (전원 대피)</li>
-                    <li><strong>119 신고 및 비상선 연락망 전파</strong> (안전관리자/현장소장)</li>
-                    <li><strong>응급처치 실시</strong> (AED 및 구급약품 활용)</li>
-                    <li><strong>현장 보존 및 조사대응</strong> (사진 촬영 및 출입 통제)</li>
-                </ol>
             </div>
         </div>
     </div>
@@ -238,11 +255,14 @@
         <div class="nav-item" onclick="switchTab('report', this)">
             <span class="nav-icon">📢</span><span>안전제보</span>
         </div>
+        <div class="nav-item" onclick="switchTab('edu', this)">
+            <span class="nav-icon">🎓</span><span>안전교육</span>
+        </div>
         <div class="nav-item" onclick="switchTab('map', this)">
             <span class="nav-icon">🗺️</span><span>현장지도</span>
         </div>
         <div class="nav-item" onclick="switchTab('emergency', this)">
-            <span class="nav-icon">🚨</span><span>응급·비상</span>
+            <span class="nav-icon">🚨</span><span>비상연락</span>
         </div>
     </nav>
 
@@ -272,17 +292,11 @@
             { id: 2, name: '50T 이동식 크레인', company: '진해토건', spec: '50톤 트럭크레인', capacity: '정격하중 50T', status: '반입중' }
         ];
 
-        const defaultReports = [
-            { id: 1, type: '위험요인', title: '야적장 자재 적재 불안정', location: 'B-2 구역', reporter: '김근로', status: '접수완료' },
-            { id: 2, type: '작업중지', title: '강풍으로 인한 크레인 흔들림 위험', location: '해상 전면부', reporter: '이작업', status: '조치중' }
-        ];
-
         // LocalStorage Initializer
         if (!localStorage.getItem('gems_highrisk')) localStorage.setItem('gems_highrisk', JSON.stringify(defaultHighRisks));
         if (!localStorage.getItem('gems_workers_v2')) localStorage.setItem('gems_workers_v2', JSON.stringify(defaultWorkers));
         if (!localStorage.getItem('gems_issues')) localStorage.setItem('gems_issues', JSON.stringify(defaultIssues));
         if (!localStorage.getItem('gems_equip_v2')) localStorage.setItem('gems_equip_v2', JSON.stringify(defaultEquip));
-        if (!localStorage.getItem('gems_reports')) localStorage.setItem('gems_reports', JSON.stringify(defaultReports));
 
         function getData(key) { return JSON.parse(localStorage.getItem(key)); }
         function setData(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
@@ -393,18 +407,6 @@
                     </div>` : `<span class="badge badge-success">${e.status}</span>`}
                 </div>
             `).join('');
-
-            // 5. Reports List
-            const reports = getData('gems_reports');
-            document.getElementById('reportList').innerHTML = reports.map(r => `
-                <div class="item-row">
-                    <div>
-                        <strong>[${r.type}] ${r.title}</strong>
-                        <div style="font-size:0.75rem; color:#666;">장소: ${r.location} | 신고자: ${r.reporter}</div>
-                    </div>
-                    <span class="badge ${r.type === '작업중지' ? 'badge-danger' : 'badge-warning'}">${r.status}</span>
-                </div>
-            `).join('');
         }
 
         // --- MODAL UTILS ---
@@ -418,7 +420,7 @@
             document.getElementById('globalModal').classList.remove('active');
         }
 
-        // --- CRUD HANDLERS ---
+        // --- C.R.U.D HANDLERS ---
         function openHighRiskForm(id = null) {
             const list = getData('gems_highrisk');
             const item = id ? list.find(x => x.id === id) : { name: '', area: '', risk: '상', status: '진행중' };
@@ -437,7 +439,6 @@
         }
 
         function saveHighRisk(id) {
-            // TODO: 백엔드 API 연동 위치 (POST/PUT /api/highrisk)
             let list = getData('gems_highrisk');
             const name = document.getElementById('hrName').value;
             const area = document.getElementById('hrArea').value;
@@ -556,91 +557,26 @@
             }
         }
 
-        // --- REPORT & WORK STOP MODALS ---
-        function openReportModal() {
-            openModal('📸 위험요인 / 아차사고 신고', `
-                <div class="form-group"><label>신고 구분</label>
-                    <select id="rptType" class="form-control">
-                        <option value="위험요인">위험요인 신고</option>
-                        <option value="아차사고">아차사고 신고</option>
-                    </select>
-                </div>
-                <div class="form-group"><label>제목</label><input type="text" id="rptTitle" class="form-control" placeholder="예: 난간대 미설치"></div>
-                <div class="form-group"><label>위치</label><input type="text" id="rptLoc" class="form-control" placeholder="예: 케이슨 B구역"></div>
-                <div class="form-group"><label>신고자 성명 (익명 가능)</label><input type="text" id="rptUser" class="form-control" value="익명 근로자"></div>
-                <div class="form-group"><label>사진 첨부</label><input type="file" accept="image/*" class="form-control"></div>
-                <button class="btn btn-warning" style="width:100%; margin-top:10px;" onclick="saveReport()">신고 접수하기</button>
-            `);
-        }
-
-        function saveReport() {
-            // TODO: 백엔드 API 연동 위치 (POST /api/reports)
-            let list = getData('gems_reports');
-            const type = document.getElementById('rptType').value;
-            const title = document.getElementById('rptTitle').value;
-            const location = document.getElementById('rptLoc').value;
-            const reporter = document.getElementById('rptUser').value;
-
-            if(!title) return alert('제목을 입력하세요.');
-
-            list.push({ id: Date.now(), type, title, location, reporter, status: '접수완료' });
-            setData('gems_reports', list);
-            closeModal();
-            renderAll();
-            alert('안전 제보가 성공적으로 접수되었습니다.');
-        }
-
-        function openWorkStopModal() {
-            openModal('🚨 작업중지 요청 (근로자 권리)', `
-                <div style="background:#fff5f5; padding:8px; border-radius:6px; font-size:0.75rem; color:#c53030; margin-bottom:10px;">
-                    ※ 급박한 위험 시 즉시 작업을 중단하고 대피 후 요청서를 작성하세요.
-                </div>
-                <div class="form-group"><label>위험상황 제목</label><input type="text" id="wsTitle" class="form-control" placeholder="예: 강풍으로 인한 자재 낙하 위험"></div>
-                <div class="form-group"><label>작업 장소</label><input type="text" id="wsLoc" class="form-control" placeholder="예: 상부공 해상 작업장"></div>
-                <div class="form-group"><label>요청자 성명</label><input type="text" id="wsUser" class="form-control" placeholder="성명 입력"></div>
-                <button class="btn btn-danger" style="width:100%; margin-top:10px;" onclick="saveWorkStop()">작업중지 요청 발송</button>
-            `);
-        }
-
-        function saveWorkStop() {
-            let list = getData('gems_reports');
-            const title = document.getElementById('wsTitle').value;
-            const location = document.getElementById('wsLoc').value;
-            const reporter = document.getElementById('wsUser').value || '근로자';
-
-            if(!title) return alert('위험상황을 입력하세요.');
-
-            list.push({ id: Date.now(), type: '작업중지', title, location, reporter, status: '조치중' });
-            setData('gems_reports', list);
-            closeModal();
-            renderAll();
-            alert('🚨 작업중지 요청이 관리자 및 상황실로 즉시 전파되었습니다.');
-        }
-
-        // --- INTERACTIVE MAP CANVAS ---
+        // --- MAP CANVAS ---
         function drawMap(filter) {
             const canvas = document.getElementById('siteMapCanvas');
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
 
-            // Draw Background Site Plan
             ctx.fillStyle = "#e5e7eb";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Sea area
             ctx.fillStyle = "#93c5fd";
             ctx.fillRect(0, 0, canvas.width, 90);
             ctx.fillStyle = "#1e3a8a";
             ctx.font = "11px sans-serif";
             ctx.fillText("🌊 부산 진해신항 해상 구역 (1-1공구)", 10, 20);
 
-            // Land Area
             ctx.fillStyle = "#d1d5db";
             ctx.fillRect(10, 100, 320, 150);
             ctx.fillStyle = "#374151";
             ctx.fillText("🏗️ 육상 야적장 및 케이슨 제작장", 20, 120);
 
-            // Pins Visual Function
             const pins = [
                 { type: 'risk', x: 80, y: 50, label: '🔥 케이슨 침설' },
                 { type: 'equip', x: 220, y: 150, label: '🚜 50T 크레인' },
