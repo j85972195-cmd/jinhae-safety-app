@@ -6,93 +6,254 @@
   <title>진해신항 1-1공구 스마트 안전관리</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0d47a1">
+  <!-- QR Code 생성 라이브러리 (CDN) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
     :root {
       --primary-color: #0d47a1;
       --secondary-color: #1976d2;
       --accent-color: #d32f2f;
+      --warning-color: #ed6c02;
+      --success-color: #2e7d32;
       --bg-color: #f4f6f9;
       --card-bg: #ffffff;
       --text-main: #212121;
       --text-sub: #666666;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: var(--bg-color); color: var(--text-main); padding-bottom: 75px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background-color: var(--bg-color); color: var(--text-main); padding-bottom: 75px; }
     
-    /* 상단 헤더 */
-    header { background-color: var(--primary-color); color: #fff; padding: 16px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    header h1 { font-size: 1.1rem; font-weight: 700; }
-    header p { font-size: 0.8rem; opacity: 0.9; margin-top: 2px; }
+    /* Header & Quick Action */
+    header { background-color: var(--primary-color); color: #fff; padding: 12px 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
+    header h1 { font-size: 1.05rem; font-weight: 700; }
+    header p { font-size: 0.75rem; opacity: 0.85; }
+    .header-btns { display: flex; gap: 6px; }
+    .btn-header { background: rgba(255,255,255,0.2); border: none; color: #fff; padding: 6px 10px; border-radius: 16px; font-size: 0.75rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 4px; }
 
-    /* Tab 컨텐츠 영역 */
-    .tab-content { display: none; padding: 16px; }
+    /* Modal Overlay */
+    .modal { display: none; position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; padding: 20px; }
+    .modal.active { display: flex; }
+    .modal-content { background: #fff; border-radius: 12px; width: 100%; max-width: 400px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); max-height: 85vh; overflow-y: auto; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; font-weight: bold; font-size: 1.05rem; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+    .close-btn { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #666; }
+
+    /* Tab Layout */
+    .tab-content { display: none; padding: 14px; }
     .tab-content.active { display: block; }
 
-    /* 대시보드 카드 스타일 */
-    .card { background: var(--card-bg); border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-    .card-title { font-size: 1rem; font-weight: bold; margin-bottom: 12px; color: var(--primary-color); display: flex; justify-content: space-between; align-items: center; }
+    /* Cards */
+    .card { background: var(--card-bg); border-radius: 10px; padding: 14px; margin-bottom: 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+    .card-title { font-size: 0.95rem; font-weight: bold; margin-bottom: 10px; color: var(--primary-color); display: flex; justify-content: space-between; align-items: center; }
+    
+    /* High-Risk Highlight Banner */
+    .card-high-risk { background: #ffebee; border: 2px solid var(--accent-color); border-radius: 10px; padding: 14px; margin-bottom: 14px; animation: pulse 2s infinite; }
+    .card-high-risk .card-title { color: var(--accent-color); font-size: 1rem; }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.2); } 70% { box-shadow: 0 0 0 8px rgba(211, 47, 47, 0); } 100% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0); } }
 
-    /* 연락처 리스트 스타일 */
-    .contact-group { margin-bottom: 16px; }
-    .contact-group-title { font-size: 0.95rem; font-weight: bold; color: #333; padding: 8px 12px; background: #e3f2fd; border-radius: 6px; margin-bottom: 8px; border-left: 4px solid var(--primary-color); }
-    .contact-card { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #eee; background: #fff; border-radius: 8px; margin-bottom: 6px; }
-    .contact-info { display: flex; flex-direction: column; }
-    .contact-name { font-size: 0.95rem; font-weight: bold; color: #222; }
-    .contact-role { font-size: 0.8rem; color: var(--text-sub); }
-    .call-btn { background-color: #2e7d32; color: white; border: none; padding: 8px 14px; border-radius: 20px; text-decoration: none; font-size: 0.85rem; font-weight: bold; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
+    /* Tables */
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; text-align: center; }
+    .data-table th { background: #f0f4f8; padding: 8px 4px; border-bottom: 1px solid #ddd; font-weight: bold; color: #333; }
+    .data-table td { padding: 8px 4px; border-bottom: 1px solid #eee; }
+
+    /* Contact Cards */
+    .contact-group-title { font-size: 0.9rem; font-weight: bold; color: #333; padding: 6px 10px; background: #e3f2fd; border-radius: 6px; margin: 10px 0 6px 0; border-left: 4px solid var(--primary-color); }
+    .contact-card { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; background: #fff; border-radius: 6px; margin-bottom: 4px; }
+    .call-btn { background-color: #2e7d32; color: white; padding: 6px 12px; border-radius: 16px; text-decoration: none; font-size: 0.8rem; font-weight: bold; display: inline-flex; align-items: center; gap: 3px; }
     .call-btn.emergency { background-color: var(--accent-color); }
 
-    /* 하단 네비게이션 바 (6개 메뉴) */
-    nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 62px; background-color: #ffffff; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #e0e0e0; z-index: 1000; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
-    .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; height: 100%; color: #757575; text-decoration: none; font-size: 0.7rem; font-weight: 500; cursor: pointer; }
-    .nav-item .icon { font-size: 1.2rem; margin-bottom: 2px; }
+    /* Map Area & Pins */
+    .map-container { position: relative; width: 100%; height: 260px; background: #e3ecef; border-radius: 8px; border: 1px solid #ccc; overflow: hidden; }
+    .map-bg { width: 100%; height: 100%; object-fit: cover; opacity: 0.85; }
+    .map-pin { position: absolute; padding: 4px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: bold; color: #fff; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.3); transform: translate(-50%, -50%); display: flex; align-items: center; gap: 3px; }
+    .pin-danger { background: var(--accent-color); }
+    .pin-equipment { background: var(--secondary-color); }
+    .pin-plan { background: var(--warning-color); }
+
+    /* Badges & Form Elements */
+    .badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 0.72rem; font-weight: bold; color: #fff; }
+    .badge-danger { background-color: var(--accent-color); }
+    .badge-warn { background-color: var(--warning-color); }
+    .badge-info { background-color: var(--secondary-color); }
+    .badge-success { background-color: var(--success-color); }
+    
+    .form-group { margin-bottom: 12px; text-align: left; }
+    .form-group label { display: block; font-size: 0.8rem; font-weight: bold; margin-bottom: 4px; }
+    .form-control { width: 100%; padding: 8px; font-size: 0.85rem; border: 1px solid #ccc; border-radius: 6px; }
+    .btn-submit { width: 100%; background: var(--primary-color); color: #fff; border: none; padding: 10px; border-radius: 6px; font-weight: bold; font-size: 0.9rem; cursor: pointer; margin-top: 8px; }
+
+    /* Bottom Navigation */
+    nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 60px; background-color: #ffffff; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #e0e0e0; z-index: 1000; box-shadow: 0 -2px 8px rgba(0,0,0,0.05); }
+    .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; height: 100%; color: #757575; text-decoration: none; font-size: 0.65rem; font-weight: 500; cursor: pointer; }
+    .nav-item .icon { font-size: 1.1rem; margin-bottom: 2px; }
     .nav-item.active { color: var(--primary-color); font-weight: bold; }
   </style>
 </head>
 <body>
 
+  <!-- 상단 헤더 -->
   <header>
-    <h1>부산 진해신항 1-1공구</h1>
-    <p>스마트 안전관리 시스템 (Gems)</p>
+    <div>
+      <h1>진해신항 1-1공구</h1>
+      <p>스마트 안전관리 (Gems)</p>
+    </div>
+    <div class="header-btns">
+      <button class="btn-header" onclick="openModal('modal-auth')">🔑 <span id="auth-btn-text">관리자</span></button>
+      <button class="btn-header" onclick="openModal('modal-qr')">📱 QR</button>
+      <button class="btn-header" onclick="openModal('modal-pwa')">📲 앱설치</button>
+    </div>
   </header>
 
-  <!-- 1. 홈 탭 -->
+  <!-- 1. 메인 홈 / 대시보드 탭 -->
   <main id="tab-home" class="tab-content active">
-    <div class="card">
-      <div class="card-title">오늘의 현장 현황</div>
-      <p style="font-size: 0.9rem; color: #555;">출근 인원: <strong>약 200명</strong> (원청 1개사 + 협력사 5개사)</p>
+    <!-- 고위험작업 하이라이트 카우셀/강조 영역 -->
+    <div class="card-high-risk">
+      <div class="card-title">
+        <span>🔥 오늘 고위험 집중 관리작업</span>
+        <span class="badge badge-danger">3건 진행중</span>
+      </div>
+      <div style="font-size: 0.85rem; line-height: 1.5; color: #333;">
+        <p>• <strong>[해상크레인]</strong> 케이슨 거치 및 양중 (통제관: 정인교)</p>
+        <p>• <strong>[연약지반]</strong> PVD 타설 장비 이동 작업 (통제관: 김광석)</p>
+        <p>• <strong>[밀폐공간]</strong> 굴착면 내부 배수작업 (통제관: 이재명)</p>
+      </div>
     </div>
-    <div class="card">
-      <div class="card-title">고위험 작업 현황 <span style="font-size:0.75rem; color:red;">● 3건 진행중</span></div>
-      <ul style="font-size: 0.85rem; line-height: 1.6; color: #444; padding-left: 18px;">
-        <li>케이슨 제작 및 거치 작업 (중장비 통제)</li>
-        <li>연약지반 개량 공사 (PVD 타설기)</li>
-        <li>해상 크레인 양중 작업</li>
-      </ul>
-    </div>
-  </main>
 
-  <!-- 2. 작업안전 탭 -->
-  <main id="tab-safety" class="tab-content">
+    <!-- 출근 인원 현황 (업체별) -->
     <div class="card">
-      <div class="card-title">작업허가서 (PTW) 상태</div>
-      <p style="font-size: 0.85rem; color: #666;">오늘 승인된 고위험 작업허가서 목록 및 점검표를 확인합니다.</p>
+      <div class="card-title">
+        <span>👷 업체별 출근 인원 현황</span>
+        <button class="badge badge-info admin-only" style="display:none; border:none; cursor:pointer;" onclick="openModal('modal-attendance')">인원 수정</button>
+      </div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>구분</th>
+            <th>업체명</th>
+            <th>주요공종</th>
+            <th>출근인원</th>
+          </tr>
+        </thead>
+        <tbody id="attendance-list">
+          <tr><td>원청</td><td>현대건설</td><td>총괄/안전</td><td>25명</td></tr>
+          <tr><td>협력사</td><td>(주)한라해양</td><td>케이슨 거치</td><td>45명</td></tr>
+          <tr><td>협력사</td><td>세종토건</td><td>연약지반 개량</td><td>38명</td></tr>
+          <tr><td>협력사</td><td>대진건설</td><td>지반 굴착</td><td>52명</td></tr>
+          <tr><td>협력사</td><td>삼호크레인</td><td>장비 양중</td><td>12명</td></tr>
+        </tbody>
+        <tfoot>
+          <tr style="background:#f9f9f9; font-weight:bold;">
+            <td colspan="3">합계</td>
+            <td id="total-workers" style="color:var(--primary-color);">172명</td>
+          </tr>
+        </tfoot>
+      </table>
     </div>
-  </main>
 
-  <!-- 3. 현장지도 탭 -->
-  <main id="tab-map" class="tab-content">
+    <!-- 미조치 안전 항목 요약 -->
     <div class="card">
-      <div class="card-title">진해신항 1-1공구 스마트 배치도</div>
-      <div style="width: 100%; height: 200px; background: #e0e0e0; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #666;">
-        [CAD/SVG 기반 현장 배치도 및 AED 위치]
+      <div class="card-title">
+        <span>⚠️ 지적 및 미조치 현황</span>
+        <span class="badge badge-warn">미조치 2건</span>
+      </div>
+      <div style="font-size: 0.82rem; color: #444;">
+        <div style="padding: 6px; background:#fff3e0; border-radius:4px; margin-bottom:6px;">
+          <strong>[A구역]</strong> 케이슨 제작장 개구부 단부 난간대 일부 미설치 (담당: 한라해양)
+        </div>
+        <div style="padding: 6px; background:#fff3e0; border-radius:4px;">
+          <strong>[C구역]</strong> PVD 타설기 신호수 미배치 지적 (담당: 세종토건)
+        </div>
       </div>
     </div>
   </main>
 
-  <!-- 4. 응급·비상 탭 (안전팀/수행팀 원클릭 통화 연동) -->
+  <!-- 2. 작업안전 및 장비현황 탭 -->
+  <main id="tab-safety" class="tab-content">
+    <div class="card">
+      <div class="card-title">
+        <span>🚜 현장 반입/반출 장비 현황</span>
+        <button class="badge badge-info admin-only" style="display:none; border:none; cursor:pointer;" onclick="alert('장비 등록 모달 연동')">+ 장비등록</button>
+      </div>
+      <div style="display:flex; gap:6px; margin-bottom:10px;">
+        <span class="badge badge-success">반입중 4대</span>
+        <span class="badge badge-warn">반입예정 2대</span>
+        <span class="badge badge-danger">반출예정 1대</span>
+      </div>
+      
+      <div style="font-size: 0.82rem;">
+        <div style="border-bottom:1px solid #eee; padding:8px 0;">
+          <div style="display:flex; justify-content:space-between;">
+            <strong>500톤 해상크레인 (삼호호)</strong>
+            <span class="badge badge-success">반입중</span>
+          </div>
+          <p style="color:#666; margin-top:3px;">작업: 케이슨 양중 및 침설 | 위치: P1 부두</p>
+        </div>
+        <div style="border-bottom:1px solid #eee; padding:8px 0;">
+          <div style="display:flex; justify-content:space-between;">
+            <strong>PVD 타설기 (01호)</strong>
+            <span class="badge badge-success">반입중</span>
+          </div>
+          <p style="color:#666; margin-top:3px;">작업: 연약지반 개량 | 위치: B2 구역</p>
+        </div>
+        <div style="border-bottom:1px solid #eee; padding:8px 0;">
+          <div style="display:flex; justify-content:space-between;">
+            <strong>CAT 08 굴삭기</strong>
+            <span class="badge badge-warn">9/29 반입예정</span>
+          </div>
+          <p style="color:#666; margin-top:3px;">작업: 토사 굴착 및 사토 | 위치: A1 구역</p>
+        </div>
+        <div style="padding:8px 0;">
+          <div style="display:flex; justify-content:space-between;">
+            <strong>250톤 휠크레인</strong>
+            <span class="badge badge-danger">9/30 반출예정</span>
+          </div>
+          <p style="color:#666; margin-top:3px;">작업: 자재 양중 완료 | 위치: 정문 야적장</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 3. 현장지도 탭 (미조치 + 장비 배치도) -->
+  <main id="tab-map" class="tab-content">
+    <div class="card">
+      <div class="card-title">
+        <span>🗺️ 인터랙티브 현장 지도</span>
+        <span style="font-size:0.75rem; color:#666;">핀 클릭시 상세정보</span>
+      </div>
+      
+      <!-- 지도 필터 버튼 -->
+      <div style="display:flex; gap:4px; margin-bottom:8px; overflow-x:auto;">
+        <button class="badge badge-info" onclick="filterMap('all')">전체보기</button>
+        <button class="badge badge-danger" onclick="filterMap('danger')">미조치 항목</button>
+        <button class="badge badge-success" onclick="filterMap('equipment')">반입 장비</button>
+      </div>
+
+      <!-- 지도 그래픽 영역 (SVG/Canvas mock) -->
+      <div class="map-container" id="map-box">
+        <svg class="map-bg" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+          <rect width="400" height="260" fill="#cfd8dc"/>
+          <!-- 해상 영역 -->
+          <path d="M 0 0 L 400 0 L 400 90 L 0 130 Z" fill="#90caf9"/>
+          <text x="20" y="30" font-size="12" fill="#1565c0" font-weight="bold">진해신항 해상구역</text>
+          <!-- 안벽 및 육상 -->
+          <path d="M 0 130 L 400 90 L 400 260 L 0 260 Z" fill="#b0bec5"/>
+          <rect x="50" y="150" width="100" height="70" fill="#eceff1" stroke="#90a4ae"/>
+          <text x="60" y="180" font-size="10" fill="#455a64">A구역 (케이슨)</text>
+          <rect x="220" y="130" width="120" height="80" fill="#eceff1" stroke="#90a4ae"/>
+          <text x="230" y="160" font-size="10" fill="#455a64">B구역 (연약지반)</text>
+        </svg>
+
+        <!-- 지도 핀 들 -->
+        <div class="map-pin pin-danger map-item-danger" style="top: 40%; left: 30%;" onclick="alert('[A구역 미조치]\n개구부 난간대 미설치\n담당: 한라해양')">⚠️ 난간대 미설치</div>
+        <div class="map-pin pin-danger map-item-danger" style="top: 65%; left: 70%;" onclick="alert('[B구역 미조치]\nPVD 신호수 미배치\n담당: 세종토건')">⚠️ 신호수 미배치</div>
+        <div class="map-pin pin-equipment map-item-equipment" style="top: 25%; left: 60%;" onclick="alert('[해상크레인 500T]\n작업: 케이슨 침설\n상태: 반입 운용중')">🏗️ 500T 크레인</div>
+        <div class="map-pin pin-equipment map-item-equipment" style="top: 70%; left: 60%;" onclick="alert('[PVD 타설기 01호]\n작업: 드레이น 타설\n상태: 반입 운용중')">🚜 PVD 타설기</div>
+        <div class="map-pin pin-plan map-item-equipment" style="top: 80%; left: 20%;" onclick="alert('[CAT 08 굴삭기]\n상태: 9/29 반입예정')">🚚 굴삭기(예정)</div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 4. 응급·비상 탭 -->
   <main id="tab-emergency" class="tab-content">
-    <!-- 긴급 119 신고 -->
     <div class="card" style="border: 1px solid var(--accent-color); background-color: #fff8f8;">
       <div class="card-title" style="color: var(--accent-color);">비상 긴급 신고</div>
       <div style="display: flex; gap: 10px; margin-top: 8px;">
@@ -100,60 +261,34 @@
       </div>
     </div>
 
-    <!-- 안전팀 비상연락망 -->
     <div class="contact-group">
       <div class="contact-group-title">안전팀</div>
-      
       <div class="contact-card">
-        <div class="contact-info">
-          <span class="contact-name">방기동 팀장</span>
-          <span class="contact-role">안전팀 / 010-7578-3117</span>
-        </div>
+        <div><strong>방기동 팀장</strong> <span style="font-size:0.75rem; color:#666;">(010-7578-3117)</span></div>
         <a href="tel:01075783117" class="call-btn">📞 통화</a>
       </div>
-
       <div class="contact-card">
-        <div class="contact-info">
-          <span class="contact-name">정인교 차장</span>
-          <span class="contact-role">안전팀 / 010-9301-2265</span>
-        </div>
+        <div><strong>정인교 차장</strong> <span style="font-size:0.75rem; color:#666;">(010-9301-2265)</span></div>
         <a href="tel:01093012265" class="call-btn">📞 통화</a>
       </div>
-
       <div class="contact-card">
-        <div class="contact-info">
-          <span class="contact-name">이재명 차장</span>
-          <span class="contact-role">안전팀 / 010-7923-0407</span>
-        </div>
+        <div><strong>이재명 차장</strong> <span style="font-size:0.75rem; color:#666;">(010-7923-0407)</span></div>
         <a href="tel:01079230407" class="call-btn">📞 통화</a>
       </div>
     </div>
 
-    <!-- 수행팀 비상연락망 -->
     <div class="contact-group">
       <div class="contact-group-title">수행팀</div>
-
       <div class="contact-card">
-        <div class="contact-info">
-          <span class="contact-name">김정규 팀장</span>
-          <span class="contact-role">수행팀 / 010-2306-0069</span>
-        </div>
+        <div><strong>김정규 팀장</strong> <span style="font-size:0.75rem; color:#666;">(010-2306-0069)</span></div>
         <a href="tel:01023060069" class="call-btn">📞 통화</a>
       </div>
-
       <div class="contact-card">
-        <div class="contact-info">
-          <span class="contact-name">김광석 차장</span>
-          <span class="contact-role">수행팀 / 010-4194-0110</span>
-        </div>
+        <div><strong>김광석 차장</strong> <span style="font-size:0.75rem; color:#666;">(010-4194-0110)</span></div>
         <a href="tel:01041940110" class="call-btn">📞 통화</a>
       </div>
-
       <div class="contact-card">
-        <div class="contact-info">
-          <span class="contact-name">김태의 차장</span>
-          <span class="contact-role">수행팀 / 010-8007-1925</span>
-        </div>
+        <div><strong>김태의 차장</strong> <span style="font-size:0.75rem; color:#666;">(010-8007-1925)</span></div>
         <a href="tel:01080071925" class="call-btn">📞 통화</a>
       </div>
     </div>
@@ -167,14 +302,12 @@
     </div>
     <div class="nav-item" onclick="switchTab('safety', this)">
       <span class="icon">📋</span>
-      <span>작업안전</span>
+      <span>작업/장비</span>
     </div>
-    <!-- 외부 링크 1: 안전제보 (현대건설 HDeSP) -->
     <a href="https://hpms.hdec.co.kr/HDeSP/pSiteSafe/SafetyReport/m/SafetyReportM.aspx?siteCode=I51E&lang=ko&m=1" target="_blank" class="nav-item">
       <span class="icon">🚨</span>
       <span>안전제보</span>
     </a>
-    <!-- 외부 링크 2: 안전교육 (Safee) -->
     <a href="https://app.safee.kr/main/home" target="_blank" class="nav-item">
       <span class="icon">🎓</span>
       <span>안전교육</span>
@@ -189,7 +322,82 @@
     </div>
   </nav>
 
+  <!-- -------------------- 모달 창 모음 -------------------- -->
+
+  <!-- 1. 관리자 인증 모달 -->
+  <div class="modal" id="modal-auth">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>🔑 관리자 권한 인증</span>
+        <button class="close-btn" onclick="closeModal('modal-auth')">✕</button>
+      </div>
+      <div id="auth-form-box">
+        <p style="font-size:0.8rem; color:#666; margin-bottom:12px;">원청 및 협력업체 허가 인원만 최신화가 가능합니다.</p>
+        <div class="form-group">
+          <label>비밀번호 (테스트용: 1234)</label>
+          <input type="password" id="admin-pass" class="form-control" placeholder="비밀번호 입력">
+        </div>
+        <button class="btn-submit" onclick="loginAdmin()">인증하기</button>
+      </div>
+      <div id="auth-logged-box" style="display:none; text-align:center;">
+        <p style="margin-bottom:12px; font-weight:bold; color:var(--success-color);">✅ 관리자 권한으로 로그인됨</p>
+        <button class="btn-submit" style="background:var(--accent-color);" onclick="logoutAdmin()">로그아웃</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. QR코드 접속 모달 -->
+  <div class="modal" id="modal-qr">
+    <div class="modal-content" style="text-align: center;">
+      <div class="modal-header">
+        <span>📱 현장 접속 QR코드</span>
+        <button class="close-btn" onclick="closeModal('modal-qr')">✕</button>
+      </div>
+      <div id="qrcode" style="display: flex; justify-content: center; margin: 16px 0;"></div>
+      <p style="font-size:0.8rem; color:#555;">현장 근로자 및 관리자는 QR코드를 스캔하여 바로 접속할 수 있습니다.</p>
+    </div>
+  </div>
+
+  <!-- 3. PWA 설치 안내 모달 -->
+  <div class="modal" id="modal-pwa">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>📲 모바일 앱 설치 방법</span>
+        <button class="close-btn" onclick="closeModal('modal-pwa')">✕</button>
+      </div>
+      <div style="font-size:0.85rem; line-height:1.6; color:#333;">
+        <p><strong>[삼성 인터넷 / 갤럭시]</strong><br>1. 하단 메뉴 <code>≡</code> 클릭<br>2. <strong>'현재 페이지 추가'</strong> -> <strong>'홈 화면'</strong> 선택</p>
+        <hr style="margin:10px 0;">
+        <p><strong>[Chrome 브라우저]</strong><br>1. 상단 점 3개 <code>⋮</code> 클릭<br>2. <strong>'앱 설치'</strong> 또는 <strong>'홈 화면에 추가'</strong> 선택</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. 출근 인원 수정 모달 (관리자 전용) -->
+  <div class="modal" id="modal-attendance">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>👷 업체별 출근 인원 입력</span>
+        <button class="close-btn" onclick="closeModal('modal-attendance')">✕</button>
+      </div>
+      <div class="form-group">
+        <label>현대건설 (원청)</label>
+        <input type="number" id="input-att-0" class="form-control" value="25">
+      </div>
+      <div class="form-group">
+        <label>(주)한라해양</label>
+        <input type="number" id="input-att-1" class="form-control" value="45">
+      </div>
+      <div class="form-group">
+        <label>세종토건</label>
+        <input type="number" id="input-att-2" class="form-control" value="38">
+      </div>
+      <button class="btn-submit" onclick="saveAttendance()">저장 및 현황 최신화</button>
+    </div>
+  </div>
+
   <script>
+    // 탭 전환
     function switchTab(tabId, element) {
       document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
       document.getElementById('tab-' + tabId).classList.add('active');
@@ -198,9 +406,81 @@
       window.scrollTo(0, 0);
     }
 
+    // 모달 제어
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+    // 지도 핀 필터링
+    function filterMap(type) {
+      const dangerPins = document.querySelectorAll('.map-item-danger');
+      const equipPins = document.querySelectorAll('.map-item-equipment');
+      if(type === 'all') {
+        dangerPins.forEach(p => p.style.display = 'flex');
+        equipPins.forEach(p => p.style.display = 'flex');
+      } else if(type === 'danger') {
+        dangerPins.forEach(p => p.style.display = 'flex');
+        equipPins.forEach(p => p.style.display = 'none');
+      } else if(type === 'equipment') {
+        dangerPins.forEach(p => p.style.display = 'none');
+        equipPins.forEach(p => p.style.display = 'flex');
+      }
+    }
+
+    // 관리자 로그인/로그아웃 Mock
+    let isAdmin = false;
+    function loginAdmin() {
+      const pass = document.getElementById('admin-pass').value;
+      if(pass === '1234') {
+        isAdmin = true;
+        document.getElementById('auth-form-box').style.display = 'none';
+        document.getElementById('auth-logged-box').style.display = 'block';
+        document.getElementById('auth-btn-text').innerText = '관리자ON';
+        document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
+        alert('관리자 권한이 인증되었습니다.');
+        closeModal('modal-auth');
+      } else {
+        alert('비밀번호가 올바르지 않습니다.');
+      }
+    }
+    function logoutAdmin() {
+      isAdmin = false;
+      document.getElementById('auth-form-box').style.display = 'block';
+      document.getElementById('auth-logged-box').style.display = 'none';
+      document.getElementById('auth-btn-text').innerText = '관리자';
+      document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
+      closeModal('modal-auth');
+    }
+
+    // 출근 인원 수정 처리
+    function saveAttendance() {
+      const v0 = parseInt(document.getElementById('input-att-0').value) || 0;
+      const v1 = parseInt(document.getElementById('input-att-1').value) || 0;
+      const v2 = parseInt(document.getElementById('input-att-2').value) || 0;
+      
+      const rows = document.querySelectorAll('#attendance-list tr');
+      rows[0].children[3].innerText = v0 + '명';
+      rows[1].children[3].innerText = v1 + '명';
+      rows[2].children[3].innerText = v2 + '명';
+
+      const total = v0 + v1 + v2 + 52 + 12;
+      document.getElementById('total-workers').innerText = total + '명';
+      alert('출근 인원이 성공적으로 최신화되었습니다.');
+      closeModal('modal-attendance');
+    }
+
+    // QR 코드 자동 생성
+    window.addEventListener('load', () => {
+      new QRCode(document.getElementById("qrcode"), {
+        text: window.location.href,
+        width: 160,
+        height: 160
+      });
+    });
+
+    // PWA Service Worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW register failed:', err));
+        navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW failed:', err));
       });
     }
   </script>
