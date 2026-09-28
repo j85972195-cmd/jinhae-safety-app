@@ -16,56 +16,59 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-color); padding-bottom: 70px; }
+        body { background-color: var(--bg-color); color: var(--text-color); padding-bottom: 75px; }
 
         /* Header */
-        header { background-color: var(--primary-color); color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        header { background-color: var(--primary-color); color: white; padding: 14px; text-align: center; position: sticky; top: 0; z-index: 90; box-shadow: 0 2px 5px rgba(0,0,0,0.15); }
         header h1 { font-size: 1.1rem; font-weight: bold; }
-        header p { font-size: 0.75rem; opacity: 0.8; margin-top: 3px; }
+        header p { font-size: 0.75rem; opacity: 0.85; margin-top: 3px; }
 
         .container { padding: 12px; }
 
-        /* Cards & Section */
-        .card { background: var(--card-bg); border-radius: 12px; padding: 15px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        /* Cards */
+        .card { background: var(--card-bg); border-radius: 12px; padding: 14px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
         .card-title { font-size: 0.95rem; font-weight: bold; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 6px; }
-        
+
         /* Badges */
-        .badge { padding: 3px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: bold; color: white; }
+        .badge { padding: 3px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: bold; color: white; display: inline-block; }
         .badge-danger { background-color: #dc3545; }
         .badge-warning { background-color: #ffc107; color: #212529; }
         .badge-info { background-color: #17a2b8; }
         .badge-success { background-color: #28a745; }
+        .badge-leader { background-color: #d97706; color: #fff; font-weight: 800; border: 1px solid #b45309; }
 
-        /* Worker List & Table */
-        .summary-box { display: flex; gap: 8px; margin-bottom: 12px; }
-        .summary-item { flex: 1; background: #e9ecef; padding: 10px; border-radius: 8px; text-align: center; }
-        .summary-item .num { font-size: 1.2rem; font-weight: bold; color: var(--primary-color); }
-        .summary-item .label { font-size: 0.75rem; color: #666; }
+        /* Section View Controller */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
 
-        .worker-item, .equip-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed #eee; }
-        .worker-item:last-child, .equip-item:last-child { border-bottom: none; }
+        /* Items List */
+        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed #eee; }
+        .item-row:last-child { border-bottom: none; }
+        .leader-row { background-color: #fffbe3; border-left: 4px solid #f59e0b; padding-left: 8px; margin-bottom: 4px; border-radius: 4px; }
 
         /* Buttons */
-        .btn { padding: 8px 12px; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-align: center; }
+        .btn { padding: 6px 10px; border: none; border-radius: 6px; font-size: 0.78rem; font-weight: bold; cursor: pointer; text-align: center; }
         .btn-primary { background: var(--primary-color); color: white; }
+        .btn-danger { background: var(--accent-color); color: white; }
         .btn-outline { background: transparent; border: 1px solid var(--primary-color); color: var(--primary-color); }
-        .btn-sm { padding: 4px 8px; font-size: 0.75rem; }
+        .btn-sm { padding: 4px 8px; font-size: 0.72rem; }
 
-        /* Modal Bottom Sheet Style for Mobile UX */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: flex-end; flex-direction: column; }
+        /* Bottom Navigation Fixed Z-Index & Click Handling */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: #ffffff; display: flex; border-top: 1px solid #ddd; z-index: 1000; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.72rem; color: #666; text-decoration: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+        .nav-item.active { color: var(--primary-color); font-weight: bold; }
+        .nav-icon { font-size: 1.1rem; margin-bottom: 2px; }
+
+        /* Modal Sheet */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: flex-end; flex-direction: column; }
         .modal.active { display: flex; }
-        .modal-content { background: white; border-top-left-radius: 16px; border-top-right-radius: 16px; padding: 20px; max-height: 85vh; overflow-y: auto; animation: slideUp 0.3s ease-out; }
+        .modal-content { background: white; border-top-left-radius: 16px; border-top-right-radius: 16px; padding: 20px; max-height: 88vh; overflow-y: auto; animation: slideUp 0.25s ease-out; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-        /* Form Inputs */
-        .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; font-size: 0.8rem; font-weight: bold; margin-bottom: 4px; }
-        .form-control { width: 100%; padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.85rem; }
-
-        /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: white; display: flex; border-top: 1px solid #ddd; z-index: 99; }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.7rem; color: #666; text-decoration: none; }
-        .nav-item.active { color: var(--primary-color); font-weight: bold; }
+        /* Form Controls */
+        .form-group { margin-bottom: 10px; }
+        .form-group label { display: block; font-size: 0.78rem; font-weight: bold; margin-bottom: 3px; }
+        .form-control { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.85rem; }
     </style>
 </head>
 <body>
@@ -76,297 +79,163 @@
     </header>
 
     <div class="container">
-        <!-- 관리자 모드 상태 표시 -->
+        <!-- Auth Control Bar -->
         <div class="card" style="padding: 10px; background: #e3f2fd; display: flex; justify-content: space-between; align-items: center;">
             <span id="authStatus" style="font-size: 0.8rem; color: #0d47a1; font-weight: bold;">모드: 일반 사용자</span>
             <button class="btn btn-outline btn-sm" onclick="toggleAuth()">관리자 인증</button>
         </div>
 
-        <!-- 1. 공종별 근로자 출석 및 고령자 관리 카드 -->
-        <div class="card">
-            <div class="card-title">
-                <span>👥 근로자 출석 및 고령자 현황</span>
-                <button class="btn btn-primary btn-sm" onclick="openWorkerModal()">전체 근로자 조회</button>
+        <!-- TAB 1: HOME DASHBOARD -->
+        <div id="tab-home" class="tab-content active">
+            <!-- 1) 고위험 집중 관리작업 -->
+            <div class="card" style="border-left: 4px solid var(--accent-color);">
+                <div class="card-title">
+                    <span style="color: var(--accent-color);">🔥 오늘 고위험 집중 관리작업</span>
+                    <button class="btn btn-danger btn-sm admin-only" style="display:none;" onclick="openHighRiskForm()">+ 등록</button>
+                </div>
+                <div id="highRiskList"></div>
             </div>
-            <div class="summary-box">
-                <div class="summary-item">
-                    <div class="num" id="totalWorkersCount">0</div>
-                    <div class="label">오늘 출근</div>
+
+            <!-- 2) 업체별 출근 인원 현황 -->
+            <div class="card">
+                <div class="card-title">
+                    <span>👥 업체별 출근 인원 현황 (관리자/근로자/반장)</span>
+                    <button class="btn btn-primary btn-sm admin-only" style="display:none;" onclick="openWorkerForm()">+ 인원 등록/수정</button>
                 </div>
-                <div class="summary-item">
-                    <div class="num" style="color: #ff9800;" id="seniorCount">0</div>
-                    <div class="label">고령자(만60세~)</div>
-                </div>
-                <div class="summary-item">
-                    <div class="num" style="color: #f44336;" id="superSeniorCount">0</div>
-                    <div class="label">초고령자(만65세~)</div>
-                </div>
+                <div id="attendanceSummary" style="font-size:0.8rem; margin-bottom:10px; background:#f8f9fa; padding:8px; border-radius:6px;"></div>
+                <div id="workerListGrouped"></div>
             </div>
-            <p style="font-size: 0.75rem; color: #666;">※ 고령 및 초고령 근로자는 TBM 및 고위험 작업 배치 시 사전 집중 관리가 필요합니다.</p>
+
+            <!-- 3) 지적 및 미조치 현황 -->
+            <div class="card">
+                <div class="card-title">
+                    <span>⚠️ 안전 지적 및 미조치 현황</span>
+                    <button class="btn btn-primary btn-sm admin-only" style="display:none;" onclick="openIssueForm()">+ 지적 등록</button>
+                </div>
+                <div id="issueList"></div>
+            </div>
         </div>
 
-        <!-- 2. 반입 장비 관리 및 제원 조회 카드 -->
-        <div class="card">
-            <div class="card-title">
-                <span>🚜 현장 반입 장비 목록 (제원 관리)</span>
+        <!-- TAB 2: EQUIPMENT & WORK -->
+        <div id="tab-work" class="tab-content">
+            <div class="card">
+                <div class="card-title">
+                    <span>🚜 반입 장비 현황 및 제원 관리</span>
+                    <button class="btn btn-primary btn-sm admin-only" style="display:none;" onclick="openEquipForm()">+ 장비 등록</button>
+                </div>
+                <div id="equipmentList"></div>
             </div>
-            <div id="equipmentList">
-                <!-- 동적 반입 장비 목록 표출 -->
+        </div>
+
+        <!-- TAB 3: REPORT -->
+        <div id="tab-report" class="tab-content">
+            <div class="card">
+                <div class="card-title"><span>📢 안전신문고 및 위험요인 신고</span></div>
+                <p style="font-size:0.85rem; color:#666;">근로자 직접 위험요인 사진 첨부 및 실명 신고 모듈입니다.</p>
+            </div>
+        </div>
+
+        <!-- TAB 4: MAP -->
+        <div id="tab-map" class="tab-content">
+            <div class="card">
+                <div class="card-title"><span>🗺️ 현장지도 (Site Map)</span></div>
+                <p style="font-size:0.85rem; color:#666;">고위험 작업 및 장비 위치 인터랙티브 매핑 화면입니다.</p>
+            </div>
+        </div>
+
+        <!-- TAB 5: EMERGENCY -->
+        <div id="tab-emergency" class="tab-content">
+            <div class="card">
+                <div class="card-title"><span>🚨 비상대응 및 AED 위치</span></div>
+                <button class="btn btn-danger" style="width:100%; margin-top:5px;" onclick="location.href='tel:119'">📞 119 즉시 전화 연결</button>
             </div>
         </div>
     </div>
 
-    <!-- 근로자 상세/출석 관리 모달 -->
-    <div id="workerModal" class="modal">
+    <!-- GLOBAL DYNAMIC MODAL -->
+    <div id="globalModal" class="modal">
         <div class="modal-content">
             <div class="card-title">
-                <span>📋 근로자 전체 출석 및 연령 현황</span>
-                <button class="btn btn-outline btn-sm" onclick="closeModal('workerModal')">닫기</button>
+                <span id="modalTitle">등록 / 수정</span>
+                <button class="btn btn-outline btn-sm" onclick="closeModal()">닫기</button>
             </div>
-            <div id="adminWorkerControls" style="display:none; margin-bottom: 10px;">
-                <button class="btn btn-primary btn-sm" style="width: 100%;" onclick="openAddWorkerForm()">+ 신규 근로자 등록</button>
-            </div>
-            <div id="workerListContainer">
-                <!-- Dynamic Worker List -->
-            </div>
+            <div id="modalBody"></div>
         </div>
     </div>
 
-    <!-- 장비 제원 상세 및 수정 모달 -->
-    <div id="equipDetailModal" class="modal">
-        <div class="modal-content">
-            <div class="card-title">
-                <span id="equipModalTitle">장비 제원 상세</span>
-                <button class="btn btn-outline btn-sm" onclick="closeModal('equipDetailModal')">닫기</button>
-            </div>
-            <form id="equipForm">
-                <input type="hidden" id="equipId">
-                <div class="form-group">
-                    <label>장비명</label>
-                    <input type="text" id="equipName" class="form-control" readonly>
-                </div>
-                <div class="form-group">
-                    <label>등록번호 / 소속사</label>
-                    <input type="text" id="equipCompany" class="form-control" readonly>
-                </div>
-                <div class="form-group">
-                    <label>규격 및 제원 (Modifiable)</label>
-                    <input type="text" id="equipSpec" class="form-control" readonly>
-                </div>
-                <div class="form-group">
-                    <label>정격하중 / 주요 성능</label>
-                    <input type="text" id="equipCapacity" class="form-control" readonly>
-                </div>
-                <div class="form-group">
-                    <label>안전 점검 및 주의사항</label>
-                    <textarea id="equipSafetyNotes" class="form-control" rows="3" readonly></textarea>
-                </div>
-                <div id="equipAdminBtns" style="display: none; margin-top: 15px;">
-                    <button type="button" class="btn btn-primary" style="width: 100%;" onclick="saveEquipData()">제원 변경사항 저장</button>
-                </div>
-            </form>
+    <!-- FIXED BOTTOM NAVIGATION BAR -->
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="switchTab('home', this)">
+            <span class="nav-icon">🏠</span><span>홈</span>
         </div>
-    </div>
-
-    <!-- 하단 네비게이션 바 -->
-    <div class="bottom-nav">
-        <a href="#" class="nav-item active">홈</a>
-        <a href="#" class="nav-item">작업안전</a>
-        <a href="#" class="nav-item">안전제보</a>
-        <a href="#" class="nav-item">현장지도</a>
-        <a href="#" class="nav-item">응급·비상</a>
-    </div>
+        <div class="nav-item" onclick="switchTab('work', this)">
+            <span class="nav-icon">🏗️</span><span>작업/장비</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('report', this)">
+            <span class="nav-icon">📢</span><span>안전제보</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('map', this)">
+            <span class="nav-icon">🗺️</span><span>현장지도</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('emergency', this)">
+            <span class="nav-icon">🚨</span><span>응급·비상</span>
+        </div>
+    </nav>
 
     <script>
-        // --- 1. INITIAL MOCK DATA ---
         let isAdmin = false;
 
+        // Mock Initial Storage
+        const defaultHighRisks = [
+            { id: 1, name: '케이슨 3호 침설 및 수중 작업', area: '1-1공구 전면 해상', risk: '상', status: '진행중' },
+            { id: 2, name: '50T 크레인 블록 인양 작업', area: '상부공 육상 야적장', risk: '상', status: '승인완료' }
+        ];
+
         const defaultWorkers = [
-            { id: 1, name: '김철수', company: '한성건설', job: '토공/운전', birth: '1958-04-12', status: '출근', phone: '010-1234-5678' }, // 만 68세 (초고령)
-            { id: 2, name: '이영희', company: '한성건설', job: '신호수', birth: '1963-09-20', status: '출근', phone: '010-2345-6789' }, // 만 63세 (고령)
-            { id: 3, name: '박민수', company: '진해토건', job: '형틀목공', birth: '1985-01-15', status: '출근', phone: '010-3456-7890' },
-            { id: 4, name: '정명섭', company: '진해토건', job: '철근공', birth: '1960-11-05', status: '미출근', phone: '010-4567-8901' }, // 만 65세 (초고령)
-            { id: 5, name: '최동현', company: '원청(현대)', job: '안전보조', birth: '1992-07-22', status: '출근', phone: '010-5678-9012' }
+            { id: 1, name: '김현대', company: '원청(현대건설)', type: '관리자', job: '토목 안전관리', isLeader: false, status: '출근' },
+            { id: 2, name: '박토건', company: '진해토건', type: '근로자', job: '형틀목공', isLeader: true, status: '출근' }, // 작업반장
+            { id: 3, name: '이삼영', company: '삼영이앤씨', type: '근로자', job: '굴삭기 운전', isLeader: false, status: '출근' },
+            { id: 4, name: '최협력', company: '진해토건', type: '관리자', job: '현장소장', isLeader: false, status: '출근' }
         ];
 
-        const defaultEquipment = [
-            { id: 'EQ-01', name: 'CAT 330 굴삭기', company: '한성건설 (06가 1234)', spec: '30톤급 / 무한궤도식', capacity: '버켓 용량 1.2m³ / 최대굴착깊이 7.2m', notes: '후방카메라 작동 상태 양호. 퀵클플러 안전핀 체결 필수 확인.', status: '반입중' },
-            { id: 'EQ-02', name: '50T 이동식 크레인', company: '진해토건 (08나 5678)', spec: '50톤 트럭크레인', capacity: '최대작업반경 31m / 정격하중 50톤', notes: '아웃트리거 받침목 고임 상태 매일 점검. 권과방지장치 정상.', status: '반입중' },
-            { id: 'EQ-03', name: '25T 덤프트럭', company: '삼영이앤씨 (12다 9012)', spec: '25톤 / 15㎥', capacity: '적재중량 25,000kg', notes: '현장 내 제한속도(20km/h) 준수. 후진 알람음 작동 상태 정기 점검.', status: '반입예정' }
+        const defaultIssues = [
+            { id: 1, title: '크레인 작업구역 통제선 미설치', location: '야적장 B구역', status: '미조치', date: '2026-09-28' },
+            { id: 2, title: '굴삭기 후진 알람음 작동 불량', location: '케이슨 제작장', status: '조치완료', date: '2026-09-27' }
         ];
 
-        // Init localStorage if empty
-        if (!localStorage.getItem('gems_workers')) {
-            localStorage.setItem('gems_workers', JSON.stringify(defaultWorkers));
-        }
-        if (!localStorage.getItem('gems_equipment')) {
-            localStorage.setItem('gems_equipment', JSON.stringify(defaultEquipment));
-        }
+        const defaultEquip = [
+            { id: 1, name: 'CAT 330 굴삭기', company: '삼영이앤씨', spec: '30톤급', capacity: '1.2m³', status: '반입중' },
+            { id: 2, name: '50T 이동식 크레인', company: '진해토건', spec: '50톤 트럭크레인', capacity: '정격하중 50T', status: '반입중' }
+        ];
 
-        // --- 2. HELPER FUNCTIONS ---
-        function getWorkers() { return JSON.parse(localStorage.getItem('gems_workers')); }
-        function getEquipment() { return JSON.parse(localStorage.getItem('gems_equipment')); }
+        // Init LocalStorage
+        if (!localStorage.getItem('gems_highrisk')) localStorage.setItem('gems_highrisk', JSON.stringify(defaultHighRisks));
+        if (!localStorage.getItem('gems_workers_v2')) localStorage.setItem('gems_workers_v2', JSON.stringify(defaultWorkers));
+        if (!localStorage.getItem('gems_issues')) localStorage.setItem('gems_issues', JSON.stringify(defaultIssues));
+        if (!localStorage.getItem('gems_equip_v2')) localStorage.setItem('gems_equip_v2', JSON.stringify(defaultEquip));
 
-        // 연령 및 고령자 판단 (2026년 기준)
-        function calculateAge(birthString) {
-            const birthDate = new Date(birthString);
-            const today = new Date('2026-09-28'); // Current System Context Date
-            let age = today.getFullYear() - birthDate.getFullYear();
-            const m = today.getMonth() - birthDate.getMonth();
-            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-                age--;
-            }
-            return age;
-        }
+        function getData(key) { return JSON.parse(localStorage.getItem(key)); }
+        function setData(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
 
-        // --- 3. RENDER FUNCTIONS ---
-        function renderDashboard() {
-            const workers = getWorkers();
-            const equipment = getEquipment();
-
-            // 1) Worker Metrics
-            let attendedCount = 0;
-            let seniorCount = 0;
-            let superSeniorCount = 0;
-
-            workers.forEach(w => {
-                if (w.status === '출근') {
-                    attendedCount++;
-                    const age = calculateAge(w.birth);
-                    if (age >= 65) {
-                        superSeniorCount++;
-                    } else if (age >= 60) {
-                        seniorCount++;
-                    }
-                }
-            });
-
-            document.getElementById('totalWorkersCount').innerText = attendedCount + '명';
-            document.getElementById('seniorCount').innerText = seniorCount + '명';
-            document.getElementById('superSeniorCount').innerText = superSeniorCount + '명';
-
-            // 2) Equipment List Render
-            const equipContainer = document.getElementById('equipmentList');
-            equipContainer.innerHTML = '';
+        // --- TAB SWITCHING (FIXED ERROR) ---
+        function switchTab(tabName, element) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             
-            equipment.forEach(eq => {
-                const item = document.createElement('div');
-                item.className = 'equip-item';
-                item.innerHTML = `
-                    <div>
-                        <strong style="font-size:0.85rem;">${eq.name}</strong> 
-                        <span class="badge ${eq.status === '반입중' ? 'badge-success' : 'badge-warning'}">${eq.status}</span>
-                        <div style="font-size:0.75rem; color:#666; margin-top:2px;">${eq.company} | ${eq.spec}</div>
-                    </div>
-                    <button class="btn btn-outline btn-sm" onclick="openEquipDetail('${eq.id}')">제원보기</button>
-                `;
-                equipContainer.appendChild(item);
-            });
+            document.getElementById('tab-' + tabName).classList.add('active');
+            element.classList.add('active');
+            window.scrollTo(0, 0);
         }
 
-        function renderWorkerModalList() {
-            const workers = getWorkers();
-            const container = document.getElementById('workerListContainer');
-            container.innerHTML = '';
-
-            workers.forEach(w => {
-                const age = calculateAge(w.birth);
-                let ageBadge = '';
-                if (age >= 65) {
-                    ageBadge = `<span class="badge badge-danger">초고령 (만${age}세)</span>`;
-                } else if (age >= 60) {
-                    ageBadge = `<span class="badge badge-warning">고령 (만${age}세)</span>`;
-                } else {
-                    ageBadge = `<span class="badge badge-info">만${age}세</span>`;
-                }
-
-                const item = document.createElement('div');
-                item.className = 'worker-item';
-                item.innerHTML = `
-                    <div>
-                        <strong style="font-size:0.9rem;">${w.name}</strong> (${w.company} / ${w.job}) ${ageBadge}
-                        <div style="font-size:0.75rem; color:#666; margin-top:2px;">📞 ${w.phone} | 생년월일: ${w.birth}</div>
-                    </div>
-                    <div>
-                        <span class="badge ${w.status === '출근' ? 'badge-success' : 'badge-danger'}" 
-                              style="cursor:${isAdmin ? 'pointer' : 'default'};" 
-                              onclick="${isAdmin ? `toggleWorkerStatus(${w.id})` : ''}">
-                              ${w.status}
-                        </span>
-                    </div>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        // --- 4. MODAL & INTERACTION HANDLERS ---
-        function openWorkerModal() {
-            renderWorkerModalList();
-            document.getElementById('adminWorkerControls').style.display = isAdmin ? 'block' : 'none';
-            document.getElementById('workerModal').classList.add('active');
-        }
-
-        function openEquipDetail(id) {
-            const equipment = getEquipment();
-            const eq = equipment.find(e => e.id === id);
-            if (!eq) return;
-
-            document.getElementById('equipId').value = eq.id;
-            document.getElementById('equipName').value = eq.name;
-            document.getElementById('equipCompany').value = eq.company;
-            document.getElementById('equipSpec').value = eq.spec;
-            document.getElementById('equipCapacity').value = eq.capacity;
-            document.getElementById('equipSafetyNotes').value = eq.notes;
-
-            // Admin Input Control
-            const isReadonly = !isAdmin;
-            document.getElementById('equipSpec').readOnly = isReadonly;
-            document.getElementById('equipCapacity').readOnly = isReadonly;
-            document.getElementById('equipSafetyNotes').readOnly = isReadonly;
-            document.getElementById('equipAdminBtns').style.display = isAdmin ? 'block' : 'none';
-
-            document.getElementById('equipModalTitle').innerText = isAdmin ? '🚜 장비 제원 수정 (관리자)' : '🚜 장비 제원 상세정보';
-            document.getElementById('equipDetailModal').classList.add('active');
-        }
-
-        function saveEquipData() {
-            // TODO: 백엔드 API 연동 위치 (PUT /api/equipment/:id)
-            const id = document.getElementById('equipId').value;
-            let equipment = getEquipment();
-            
-            const index = equipment.findIndex(e => e.id === id);
-            if (index !== -1) {
-                equipment[index].spec = document.getElementById('equipSpec').value;
-                equipment[index].capacity = document.getElementById('equipCapacity').value;
-                equipment[index].notes = document.getElementById('equipSafetyNotes').value;
-
-                localStorage.setItem('gems_equipment', JSON.stringify(equipment));
-                alert('장비 제원 정보가 성공적으로 수정/저장되었습니다.');
-                closeModal('equipDetailModal');
-                renderDashboard();
-            }
-        }
-
-        function toggleWorkerStatus(id) {
-            // TODO: 백엔드 API 연동 위치 (PATCH /api/workers/:id/status)
-            let workers = getWorkers();
-            const index = workers.findIndex(w => w.id === id);
-            if (index !== -1) {
-                workers[index].status = workers[index].status === '출근' ? '미출근' : '출근';
-                localStorage.setItem('gems_workers', JSON.stringify(workers));
-                renderWorkerModalList();
-                renderDashboard();
-            }
-        }
-
+        // --- AUTH TOGGLE ---
         function toggleAuth() {
             if (!isAdmin) {
-                const pass = prompt("관리자 인증 비밀번호를 입력하세요 (테스트: 1234):");
+                const pass = prompt("관리자 비밀번호를 입력하세요 (테스트: 1234):");
                 if (pass === '1234') {
                     isAdmin = true;
                     document.getElementById('authStatus').innerText = "모드: 관리자 (손성영)";
                     document.getElementById('authStatus').style.color = "#d32f2f";
-                    alert("관리자 권한이 활성화되었습니다. 장비 제원 수정 및 근로자 상태 변경이 가능합니다.");
+                    alert("관리자 권한이 활성화되었습니다.");
                 } else if (pass !== null) {
                     alert("비밀번호가 올바르지 않습니다.");
                 }
@@ -375,16 +244,238 @@
                 document.getElementById('authStatus').innerText = "모드: 일반 사용자";
                 document.getElementById('authStatus').style.color = "#0d47a1";
             }
-            renderDashboard();
+            renderAll();
         }
 
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
+        // --- RENDER ALL SECTIONS ---
+        function renderAll() {
+            document.querySelectorAll('.admin-only').forEach(el => el.style.display = isAdmin ? 'inline-block' : 'none');
+
+            // 1. High Risk
+            const hrList = getData('gems_highrisk');
+            const hrContainer = document.getElementById('highRiskList');
+            hrContainer.innerHTML = hrList.map(item => `
+                <div class="item-row">
+                    <div>
+                        <strong>${item.name}</strong> <span class="badge badge-danger">${item.risk}</span>
+                        <div style="font-size:0.75rem; color:#666;">위치: ${item.area} | 상태: ${item.status}</div>
+                    </div>
+                    ${isAdmin ? `<div>
+                        <button class="btn btn-outline btn-sm" onclick="editHighRisk(${item.id})">수정</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteHighRisk(${item.id})">삭제</button>
+                    </div>` : ''}
+                </div>
+            `).join('');
+
+            // 2. Workers & Attendance
+            const workers = getData('gems_workers_v2');
+            const totalAdmin = workers.filter(w => w.type === '관리자' && w.status === '출근').length;
+            const totalWorker = workers.filter(w => w.type === '근로자' && w.status === '출근').length;
+            
+            document.getElementById('attendanceSummary').innerHTML = `
+                총 출근 인원: <strong>${totalAdmin + totalWorker}명</strong> (관리자: ${totalAdmin}명 | 근로자: ${totalWorker}명)
+            `;
+
+            const workerContainer = document.getElementById('workerListGrouped');
+            workerContainer.innerHTML = workers.map(w => `
+                <div class="item-row ${w.isLeader ? 'leader-row' : ''}">
+                    <div>
+                        <strong>${w.name}</strong> (${w.company}) 
+                        <span class="badge ${w.type === '관리자' ? 'badge-info' : 'badge-success'}">${w.type}</span>
+                        ${w.isLeader ? '<span class="badge badge-leader">👑 작업반장</span>' : ''}
+                        <div style="font-size:0.75rem; color:#666;">공종/직종: ${w.job}</div>
+                    </div>
+                    ${isAdmin ? `<div>
+                        <button class="btn btn-outline btn-sm" onclick="editWorker(${w.id})">수정</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteWorker(${w.id})">삭제</button>
+                    </div>` : `<span class="badge ${w.status === '출근' ? 'badge-success' : 'badge-danger'}">${w.status}</span>`}
+                </div>
+            `).join('');
+
+            // 3. Issues
+            const issues = getData('gems_issues');
+            document.getElementById('issueList').innerHTML = issues.map(i => `
+                <div class="item-row">
+                    <div>
+                        <strong>${i.title}</strong>
+                        <div style="font-size:0.75rem; color:#666;">장소: ${i.location} | 등록일: ${i.date}</div>
+                    </div>
+                    <div>
+                        <span class="badge ${i.status === '미조치' ? 'badge-danger' : 'badge-success'}">${i.status}</span>
+                        ${isAdmin ? `<button class="btn btn-danger btn-sm" style="margin-left:4px;" onclick="deleteIssue(${i.id})">삭제</button>` : ''}
+                    </div>
+                </div>
+            `).join('');
+
+            // 4. Equipment
+            const equip = getData('gems_equip_v2');
+            document.getElementById('equipmentList').innerHTML = equip.map(e => `
+                <div class="item-row">
+                    <div>
+                        <strong>${e.name}</strong> (${e.company})
+                        <div style="font-size:0.75rem; color:#666;">제원: ${e.spec} | 규격/용량: ${e.capacity}</div>
+                    </div>
+                    ${isAdmin ? `<div>
+                        <button class="btn btn-outline btn-sm" onclick="editEquip(${e.id})">수정</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteEquip(${e.id})">삭제</button>
+                    </div>` : `<span class="badge badge-success">${e.status}</span>`}
+                </div>
+            `).join('');
         }
 
-        // Initialize App
+        // --- MODAL UTILS & C.R.U.D HANDLERS ---
+        function openModal(title, htmlContent) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalBody').innerHTML = htmlContent;
+            document.getElementById('globalModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('globalModal').classList.remove('active');
+        }
+
+        // High Risk CRUD
+        function openHighRiskForm(id = null) {
+            const list = getData('gems_highrisk');
+            const item = id ? list.find(x => x.id === id) : { name: '', area: '', risk: '상', status: '진행중' };
+
+            openModal(id ? '고위험 작업 수정' : '신규 고위험 작업 등록', `
+                <div class="form-group"><label>작업명</label><input type="text" id="hrName" class="form-control" value="${item.name}"></div>
+                <div class="form-group"><label>작업구역/위치</label><input type="text" id="hrArea" class="form-control" value="${item.area}"></div>
+                <div class="form-group"><label>위험등급</label>
+                    <select id="hrRisk" class="form-control">
+                        <option value="상" ${item.risk==='상'?'selected':''}>상 (High)</option>
+                        <option value="중" ${item.risk==='중'?'selected':''}>중 (Medium)</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" style="width:100%; margin-top:10px;" onclick="saveHighRisk(${id})">저장하기</button>
+            `);
+        }
+
+        function saveHighRisk(id) {
+            // TODO: 백엔드 API 연동 위치 (POST/PUT /api/highrisk)
+            let list = getData('gems_highrisk');
+            const name = document.getElementById('hrName').value;
+            const area = document.getElementById('hrArea').value;
+            const risk = document.getElementById('hrRisk').value;
+
+            if(!name) return alert('작업명을 입력하세요.');
+
+            if(id) {
+                const idx = list.findIndex(x => x.id === id);
+                list[idx] = { id, name, area, risk, status: list[idx].status };
+            } else {
+                list.push({ id: Date.now(), name, area, risk, status: '진행중' });
+            }
+            setData('gems_highrisk', list);
+            closeModal();
+            renderAll();
+        }
+
+        function deleteHighRisk(id) {
+            // TODO: 백엔드 API 연동 위치 (DELETE /api/highrisk/:id)
+            if(confirm('해당 작업을 삭제하시겠습니까?')) {
+                let list = getData('gems_highrisk').filter(x => x.id !== id);
+                setData('gems_highrisk', list);
+                renderAll();
+            }
+        }
+
+        // Worker CRUD (With Leader and Type)
+        function openWorkerForm(id = null) {
+            const list = getData('gems_workers_v2');
+            const w = id ? list.find(x => x.id === id) : { name: '', company: '진해토건', type: '근로자', job: '', isLeader: false, status: '출근' };
+
+            openModal(id ? '출근 인원 수정' : '신규 인원 등록', `
+                <div class="form-group"><label>성명</label><input type="text" id="wkName" class="form-control" value="${w.name}"></div>
+                <div class="form-group"><label>소속 업체명</label><input type="text" id="wkCompany" class="form-control" value="${w.company}"></div>
+                <div class="form-group"><label>인원 구분</label>
+                    <select id="wkType" class="form-control">
+                        <option value="근로자" ${w.type==='근로자'?'selected':''}>근로자</option>
+                        <option value="관리자" ${w.type==='관리자'?'selected':''}>관리자</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>공종 / 세부 직종</label><input type="text" id="wkJob" class="form-control" value="${w.job}"></div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="wkLeader" ${w.isLeader ? 'checked' : ''}> 공종별 작업반장 지정 (황금색 하이라이트)</label>
+                </div>
+                <button class="btn btn-primary" style="width:100%; margin-top:10px;" onclick="saveWorker(${id})">저장하기</button>
+            `);
+        }
+
+        function saveWorker(id) {
+            let list = getData('gems_workers_v2');
+            const name = document.getElementById('wkName').value;
+            const company = document.getElementById('wkCompany').value;
+            const type = document.getElementById('wkType').value;
+            const job = document.getElementById('wkJob').value;
+            const isLeader = document.getElementById('wkLeader').checked;
+
+            if(!name) return alert('성명을 입력하세요.');
+
+            if(id) {
+                const idx = list.findIndex(x => x.id === id);
+                list[idx] = { id, name, company, type, job, isLeader, status: list[idx].status };
+            } else {
+                list.push({ id: Date.now(), name, company, type, job, isLeader, status: '출근' });
+            }
+            setData('gems_workers_v2', list);
+            closeModal();
+            renderAll();
+        }
+
+        function editWorker(id) { openWorkerForm(id); }
+        function deleteWorker(id) {
+            if(confirm('해당 인원 기록을 삭제하시겠습니까?')) {
+                let list = getData('gems_workers_v2').filter(x => x.id !== id);
+                setData('gems_workers_v2', list);
+                renderAll();
+            }
+        }
+
+        // Equipment CRUD
+        function openEquipForm(id = null) {
+            const list = getData('gems_equip_v2');
+            const eq = id ? list.find(x => x.id === id) : { name: '', company: '', spec: '', capacity: '', status: '반입중' };
+
+            openModal(id ? '장비 정보 수정' : '신규 장비 등록', `
+                <div class="form-group"><label>장비명</label><input type="text" id="eqName" class="form-control" value="${eq.name}"></div>
+                <div class="form-group"><label>소속/등록번호</label><input type="text" id="eqCompany" class="form-control" value="${eq.company}"></div>
+                <div class="form-group"><label>규격 및 제원</label><input type="text" id="eqSpec" class="form-control" value="${eq.spec}"></div>
+                <div class="form-group"><label>정격하중/용량</label><input type="text" id="eqCapacity" class="form-control" value="${eq.capacity}"></div>
+                <button class="btn btn-primary" style="width:100%; margin-top:10px;" onclick="saveEquip(${id})">저장하기</button>
+            `);
+        }
+
+        function saveEquip(id) {
+            let list = getData('gems_equip_v2');
+            const name = document.getElementById('eqName').value;
+            const company = document.getElementById('eqCompany').value;
+            const spec = document.getElementById('eqSpec').value;
+            const capacity = document.getElementById('eqCapacity').value;
+
+            if(id) {
+                const idx = list.findIndex(x => x.id === id);
+                list[idx] = { id, name, company, spec, capacity, status: list[idx].status };
+            } else {
+                list.push({ id: Date.now(), name, company, spec, capacity, status: '반입중' });
+            }
+            setData('gems_equip_v2', list);
+            closeModal();
+            renderAll();
+        }
+
+        function editEquip(id) { openEquipForm(id); }
+        function deleteEquip(id) {
+            if(confirm('해당 장비를 삭제하시겠습니까?')) {
+                let list = getData('gems_equip_v2').filter(x => x.id !== id);
+                setData('gems_equip_v2', list);
+                renderAll();
+            }
+        }
+
         window.onload = function() {
-            renderDashboard();
+            renderAll();
         };
     </script>
 </body>
